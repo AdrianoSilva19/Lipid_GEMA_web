@@ -9,6 +9,14 @@ function Footer() {
                 <Col className='text-center py-3'>Copyright &copy; Lipid_GEMA</Col>
               </Row>
             </Container>
+            <Container>
+                <Col className='text-center py-3'> 
+                    <a href="https://github.com/jcapels/boimmg" target="_blank" rel="noreferrer">
+                        <i className="fa-brands fa-github"></i>
+                    </a>  
+                    
+                </Col>
+            </Container>
         </footer>
   )
 }
