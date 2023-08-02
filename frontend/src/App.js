@@ -1,19 +1,23 @@
 import { Container } from 'react-bootstrap'
-import Header from './Components/Header'
-import Footer from './Components/Footer';
-
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+import Header from './components/Header'
+import Footer from './components/Footer'
+import LipidsGenerics from './screens/LipidsGenerics'
 
 function App() {
   return (
-    <div className="App">
+    <BrowserRouter>
       <Header />
       <main className="py-3">
         <Container>
-          <h1> Welcome </h1>
+          <Routes>
+            {" "}
+            <Route path="/generics" element={<LipidsGenerics />} />
+          </Routes>
         </Container>
       </main>
       <Footer />
-    </div>
+    </BrowserRouter>
   );
 }
 
