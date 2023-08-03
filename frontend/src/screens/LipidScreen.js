@@ -18,7 +18,6 @@ function LipidScreen({match}) {
 
     fetchProduct()
   },[])
-
   useEffect(() => {
     SmiDrawer.apply(); // Call SmilesDrawer.apply() after rendering the component
   }, [lipid]);
