@@ -17,16 +17,17 @@ function LipidsGenerics() {
 
   return (
     <div>
-        <h1>Latest Products </h1>
-        <Row>
-            {lipids.map(lipid => (
-                <Col key={lipid.boimmg_id} sm={12} md={6} lg={4} xl={3}>
-                    <Lipid lipid={lipid}/>
-                </Col>
-            ))}
-        </Row>
+      <h1>Generic Lipids </h1>
+      <Row>
+        {lipids.map((lipid) => (
+          <Col key={lipid.boimmg_id} sm={12} md={6} lg={4} xl={3}>
+              <Lipid lipid={lipid} />
+          </Col>
+        ))}
+      </Row>
     </div>
-  )
+  );
 }
 
 export default LipidsGenerics
+

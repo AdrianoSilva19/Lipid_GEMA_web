@@ -3,6 +3,9 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 import Header from './components/Header'
 import Footer from './components/Footer'
 import LipidsGenerics from './screens/LipidsGenerics'
+import LipidScreen from './screens/LipidScreen'
+
+
 
 function App() {
   return (
@@ -13,6 +16,7 @@ function App() {
           <Routes>
             {" "}
             <Route path="/generics" element={<LipidsGenerics />} />
+            <Route path="/generic/:id" element={<LipidScreen />} />
           </Routes>
         </Container>
       </main>
