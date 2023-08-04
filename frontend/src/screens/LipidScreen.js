@@ -27,7 +27,7 @@ function LipidScreen({match}) {
     <div className="LipidScreen">
         <Row className="align-content-start">
             <Col md={6}>
-               <Card className="my-3 p-3 rounded" border="secondary" style={{ width: '30rem',borderWidth: '2px' }} >
+               <Card className="my-3 p-3 rounded" border="Light" style={{ width: '30rem',borderWidth: '2px' }} >
               {/* Display lipid image */}
               <img
                 data-smiles = {lipid.smiles}
@@ -39,19 +39,19 @@ function LipidScreen({match}) {
             
               <Col md={6}>
                       <ListGroup variant="secondary">
-                          <ListGroup.Item variant="secondary">
+                          <ListGroup.Item variant="Light">
                               <h3><strong>{lipid.name}</strong></h3>
                           </ListGroup.Item>
 
-                          <ListGroup.Item variant="secondary" style={{ fontSize: '17px', padding: '10px',  textAlign: 'left' }}>
+                          <ListGroup.Item variant="Light" style={{ fontSize: '17px', padding: '10px',  textAlign: 'left' }}>
                             <b>FORMULA:</b> {lipid.formula}
                           </ListGroup.Item>
                           
-                          <ListGroup.Item variant="secondary" style={{ fontSize: '17px', padding: '10px',  textAlign: 'left'}}>
+                          <ListGroup.Item variant="Light" style={{ fontSize: '17px', padding: '10px',  textAlign: 'left'}}>
                             <b>FORMULA:</b> {lipid.smiles}
                           </ListGroup.Item>
 
-                          <ListGroup.Item variant="secondary" style={{ fontSize: '17px', padding: '10px',  textAlign: 'left'}}>
+                          <ListGroup.Item variant="Light" style={{ fontSize: '17px', padding: '10px',  textAlign: 'left'}}>
                             <b>FORMULA:</b> {lipid.swiss_lipids_id}
                           </ListGroup.Item>
                           

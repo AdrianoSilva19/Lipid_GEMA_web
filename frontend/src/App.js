@@ -15,8 +15,8 @@ function App() {
         <Container>
           <Routes>
             {" "}
-            <Route path="/generics" element={<LipidsGenerics />} />
-            <Route path="/generic/:id" element={<LipidScreen />} />
+            <Route path="/class" element={<LipidsGenerics />} />
+            <Route path="/class/:id" element={<LipidScreen />} />
           </Routes>
         </Container>
       </main>

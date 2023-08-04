@@ -6,12 +6,12 @@ main{
 }
 
 .NavBar{
-    height: 80px;
+    height: 60px;
     background-color: #61a290; 
 
 }
 .nav-bar-icons {
-    font-size: 16px;  
+    font-size: 20px;  
 }
 
 .NavBar .nav-bar-icons .nav-link i:hover,

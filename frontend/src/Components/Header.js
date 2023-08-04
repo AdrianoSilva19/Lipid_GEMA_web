@@ -7,15 +7,15 @@ import { LinkContainer } from 'react-router-bootstrap'
 
 function Header(){
     return(
-    <Navbar expand="lg" collapseOnSelect  className="NavBar">
+    <Navbar expand="lg" collapseOnSelect  className="NavBar" sticky="top" >
       <Container>
         <LinkContainer to='/'>
-        <Navbar.Brand style={{ fontSize: '24px'}}>Lipid_GEMA</Navbar.Brand>
+        <Navbar.Brand > <i className="fa-solid fa-disease"></i><b>Lipid_GEMA</b></Navbar.Brand>
         </LinkContainer>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
+        <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
           <Nav className="nav-bar-icons">
-            <LinkContainer to='/generics'>
+            <LinkContainer to='/class'>
             <Nav.Link><i className="fas fa-database"></i>Lipids</Nav.Link>
             </LinkContainer>
             <LinkContainer to='/tool'>
