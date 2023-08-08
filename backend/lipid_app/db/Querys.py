@@ -12,11 +12,8 @@ class Querys:
         self.password = self.conf["password"]
 
     def login(self):
-        uri = "bolt://palsson.di.uminho.pt:6094"
         driver = GraphDatabase.driver(
-            uri,
-            auth=("neo4j", "bucket-folio-truck-supreme-venus-2823"),
-            encrypted=False,
+            self.uri, auth=(self.user, self.password), encrypted=False
         )
         self.tx = driver
 
