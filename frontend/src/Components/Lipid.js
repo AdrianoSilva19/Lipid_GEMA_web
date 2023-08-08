@@ -7,7 +7,7 @@ function Lipid({lipid}) {
 
     return(
         <Card className="my-3 p-3 rounded "  >
-            <Link to={`/class/${lipid.boimmg_id}`} style={{ textDecoration: 'none' }}> 
+            <Link to={`/lipid/${lipid.boimmg_id}`} style={{ textDecoration: 'none' }}> 
             <Card.Body>
             
                 <Card.Title as="div">

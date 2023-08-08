@@ -5,14 +5,14 @@ import axios from 'axios';
 import { SmiDrawer } from 'smiles-drawer';
 
 
-function LipidScreen({match}) {
+function LipidScreen() {
     
     const lipidId = useParams();
     const [lipid,setProduct] = useState([]);
 
   useEffect(() => {
     async function fetchProduct(){
-      const {data} = await axios.get(`/api/generics/${lipidId.id}`)
+      const {data} = await axios.get(`/api/lipid/L_ID/${lipidId.id}`)
       setProduct(data)
     }  
 
@@ -48,11 +48,11 @@ function LipidScreen({match}) {
                           </ListGroup.Item>
                           
                           <ListGroup.Item variant="Light" style={{ fontSize: '17px', padding: '10px',  textAlign: 'left'}}>
-                            <b>FORMULA:</b> {lipid.smiles}
+                            <b>SMILES:</b> {lipid.smiles}
                           </ListGroup.Item>
 
                           <ListGroup.Item variant="Light" style={{ fontSize: '17px', padding: '10px',  textAlign: 'left'}}>
-                            <b>FORMULA:</b> {lipid.swiss_lipids_id}
+                            <b>SL ID:</b> {lipid.swiss_lipids_id}
                           </ListGroup.Item>
                           
 
@@ -60,7 +60,7 @@ function LipidScreen({match}) {
                   </Col>
   
     
-      <Link to="/generics/" className="btn btn-light my-3">
+      <Link to="/" className="btn btn-light my-3">
         Go Back
       </Link>
        

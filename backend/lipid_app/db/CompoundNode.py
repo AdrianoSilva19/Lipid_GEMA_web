@@ -1,10 +1,10 @@
-from DatabasesBabel import (
+from lipid_app.db.DatabasesBabel import (
     BOIMMGDatabases,
     ModelSEEDDatabases,
     AliasesTransformer,
 )
-from BOIMMGProperties import BOIMMGProperties
-from Node import OntologyNode
+from lipid_app.db.BOIMMGProperties import BOIMMGProperties
+from lipid_app.db.Node import OntologyNode
 
 
 class CompoundNode(OntologyNode):
@@ -129,13 +129,14 @@ class CompoundNode(OntologyNode):
             if property == BOIMMGDatabases.MODEL_SEED.value:
                 self.model_seed_id = node_properties[BOIMMGDatabases.MODEL_SEED.value]
 
-        for aliases_node in other_aliases:
-            for property in aliases_node:
-                if property in aliases:
-                    if aliases_node[property] not in aliases[property]:
-                        aliases[property].append(aliases_node[property])
-                else:
-                    aliases[property] = [aliases_node[property]]
+        if other_aliases:
+            for aliases_node in other_aliases:
+                for property in aliases_node:
+                    if property in aliases:
+                        if aliases_node[property] not in aliases[property]:
+                            aliases[property].append(aliases_node[property])
+                    else:
+                        aliases[property] = [aliases_node[property]]
 
         if BOIMMGProperties.FORMULA.value in node_properties:
             self.formula = node_properties[BOIMMGProperties.FORMULA.value]

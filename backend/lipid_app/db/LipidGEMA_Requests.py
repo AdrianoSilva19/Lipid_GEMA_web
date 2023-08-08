@@ -4,6 +4,7 @@ from neo4j import GraphDatabase
 from _utils import read_conf_file
 from CompoundNode import CompoundNode
 from DatabasesBabel import AliasesTransformer
+from tqdm import tqdm
 
 
 class LipidGEMA:
@@ -28,17 +29,17 @@ class LipidGEMA:
         self._tx = tx
 
     def get_all_hierarchies(self):
-        glycerolipid_id = int(self.conf.get("glycerolipids"))
-        glycerophospholipid_id = int(self.conf.get("glycerophospholipids"))
+        # glycerolipid_id = int(self.conf.get("glycerolipids"))
+        # glycerophospholipid_id = int(self.conf.get("glycerophospholipids"))
         sphingolipids_id = int(self.conf.get("sphingolipids"))
         fatty_acids_id = int(self.conf.get("fatty_acids"))
         prenol_lipids_id = int(self.conf.get("prenol_lipids"))
 
         hierarchies = {}
 
-        glycerolipid_hierarchy = self.get_hierarchy(glycerolipid_id)
+        # glycerolipid_hierarchy = self.get_hierarchy(glycerolipid_id)
         print("glycerolipids done")
-        glycerophospholipid_hierarchy = self.get_hierarchy(glycerophospholipid_id)
+        # glycerophospholipid_hierarchy = self.get_hierarchy(glycerophospholipid_id)
         print("glycerophospholipid done")
         sphingolipids_hierarchy = self.get_hierarchy(sphingolipids_id)
         print("sphingolipids done")
@@ -47,8 +48,8 @@ class LipidGEMA:
         prenol_lipids_hierarchy = self.get_hierarchy(prenol_lipids_id)
         print("prenol_lipids done")
 
-        hierarchies["glycerolipids"] = glycerolipid_hierarchy
-        hierarchies["glycerophospholipids"] = glycerophospholipid_hierarchy
+        # hierarchies["glycerolipids"] = glycerolipid_hierarchy
+        # hierarchies["glycerophospholipids"] = glycerophospholipid_hierarchy
         hierarchies["sphingolipids"] = sphingolipids_hierarchy
         hierarchies["fatty_acids"] = fatty_acids_hierarchy
         hierarchies["prenol_lipids"] = prenol_lipids_hierarchy
@@ -123,14 +124,13 @@ class LipidGEMA:
         predecessors = self.get_predecessors_by_ont_id_rel_type(id, "is_a")
 
         res = {}
-
         if predecessors:
             node_container = self.get_node_by_ont_id(predecessors[0])
             if not node_container.generic:
                 return {}
 
             i = 0
-            for pre in predecessors:
+            for pre in tqdm(predecessors):
                 i += 1
                 new_dict = self._get_hierarchy(pre)
                 pre_node_container = self.get_node_by_ont_id(pre)
