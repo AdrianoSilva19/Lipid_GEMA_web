@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Row, Col, ListGroup, Button, Card, ListGroupItem } from 'react-bootstrap';
+import { Row, Col, ListGroup, Card} from 'react-bootstrap';
 import axios from 'axios';
 import { SmiDrawer } from 'smiles-drawer';
 
@@ -23,17 +23,18 @@ function LipidScreen() {
   }, [lipid]);
 
 
+
   return (
     <div className="LipidScreen">
         <Row className="align-content-start">
             <Col md={6}>
                <Card className="my-3 p-3 rounded" border="Light" style={{ width: '30rem',borderWidth: '2px' }} >
               {/* Display lipid image */}
-              <img
-                data-smiles = {lipid.smiles}
-                data-smiles-options='{"width": 500, "height": 500}'
-                alt="Lipid Image"
-              />
+                <img
+                  data-smiles = {lipid.smiles}
+                  data-smiles-options='{"width": 500, "height": 500}'
+                  alt="Lipid Image"
+                />
               </Card>
               </Col>              
             

@@ -42,7 +42,7 @@ function SearchBar() {
         <Container>
           <Row className="searchBar">
             <Col xs={12} md={6}>
-              <FloatingLabel controlId="floatingInputGrid" label="Enter your pattern or ID">
+              <FloatingLabel controlId="floatingInputGrid" label="Enter your pattern">
                 <Form.Control
                   type="text"
                   placeholder="Type to search..."
