@@ -1,12 +1,16 @@
 import json
-from boimmgpy.database.accessors.database_access_manager import DatabaseAccessManager
+from neo4j import GraphDatabase
 
-driver = DatabaseAccessManager(conf_file_path="my_database.conf").connect()
+driver = GraphDatabase.driver(
+    "bolt://palsson.di.uminho.pt:6091", auth=("neo4j", "1234"), encrypted=False
+)
 session = driver.session()
 
 
 def get_some_data():
-    query = "match (C:Compound) where C.generic='True' return C limit 25"
+    query = (
+        "match (C:Compound) where id(C) in [43747,10002,240,365792,540868] return C "
+    )
     return session.run(query)
 
 

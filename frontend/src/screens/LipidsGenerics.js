@@ -30,7 +30,7 @@ function LipidsGenerics() {
   <Container>
     <Row className="justify-content-center">
       {lipids.map((lipid) => (
-        <Col key={lipid.boimmg_id} sm={12} md={6} lg={4} xl={3}>
+        <Col key={lipid.boimmg_id} sm={12} md={6} lg={4} xl={4}>
           <Lipid lipid={lipid} />
         </Col>
       ))}
