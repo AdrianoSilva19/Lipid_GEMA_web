@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { Row, Col, ListGroup, Card} from 'react-bootstrap';
 import axios from 'axios';
 import { SmiDrawer } from 'smiles-drawer';
+import TabList from '../components/TabList'
 
 
 function LipidScreen() {
@@ -43,42 +44,12 @@ function LipidScreen() {
           </Card>
         </Col>
       </Row>
-              <Row className="align-content-start">
-              <Col style={{marginTop: '15px'}}>
-                      <ListGroup variant="secondary">
-                         <ListGroup.Item variant="Light" style={{ fontSize: '17px', padding: '10px',  textAlign: 'left'}}>
-                            <b style={{ marginRight: '10px' }}>Lipid_GEMA ID:</b> {lipid.boimmg_id}
-                          </ListGroup.Item>
-
-                         <ListGroup.Item variant="Light" style={{ fontSize: '17px', padding: '10px',  textAlign: 'left'}}>
-                            <b style={{ marginRight: '10px' }}>SL ID:</b> {lipid.swiss_lipids_id}
-                          </ListGroup.Item>
-                                                    
-                          <ListGroup.Item variant="Light" style={{ fontSize: '17px', padding: '10px',  textAlign: 'left'}}>
-                            <b style={{ marginRight: '10px' }}>LM ID:</b> {lipid.lipidmaps_id}
-                          </ListGroup.Item>
-                          <ListGroup.Item variant="Light" style={{ fontSize: '17px', padding: '10px',  textAlign: 'left'}}>
-                            <b style={{ marginRight: '10px' }}>MS ID:</b> {lipid.model_seed_id}
-                          </ListGroup.Item>
-
-                          <ListGroup.Item variant="Light" style={{ fontSize: '17px', padding: '10px',  textAlign: 'left' }}>
-                            <b style={{ marginRight: '10px' }}>FORMULA:</b> {lipid.formula}
-                          </ListGroup.Item>
-                          
-                          <ListGroup.Item variant="Light" style={{ fontSize: '17px', padding: '10px',  textAlign: 'left'}}>
-                            <b style={{ marginRight: '10px' }}>SMILES:</b> {lipid.smiles}
-                          </ListGroup.Item>
-
-                          
-
-                      </ListGroup>
-                  </Col>
-  
-    
-      <Link to="/" className="btn btn-light my-3">
+              
+      <Row>
+        <TabList lipid={lipid} />
+        <Link to="/" className="btn btn-light my-3">
         Go Back
       </Link>
-       
       </Row>
     </div>
   );

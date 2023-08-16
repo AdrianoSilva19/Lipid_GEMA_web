@@ -78,10 +78,6 @@ class Querys:
             data = result.single()
             if data:
                 node_properties = data.get("c")
-                node_id = data.get("id")
-
-                other_aliases = self.get_all_aliases(node_id)
-                node = CompoundNode(node_id, node_properties, other_aliases)
                 return node_properties
 
             return None
@@ -107,3 +103,30 @@ class Querys:
 
             else:
                 return None
+
+    def get_components_by_ont_id_rel_type(self, ont_id: int) -> list:
+        """Get predecessors using as parameter the database identifier and the relationship type"""
+        self.login()
+        components = []
+        relationship_type = "component_of"
+        with self.tx.session() as session:
+            result = session.run(
+                "MATCH (c:Compound)<-[r]-(p:Compound) "
+                "WHERE c.boimmg_id = $ont_id AND TYPE(r) = $rel_type "
+                "RETURN p.boimmg_id as id, p.formula as formula, p.name as name ",
+                ont_id=ont_id,
+                rel_type=relationship_type,
+            )
+
+            data = result.data()
+            if data:
+                for node in data:
+                    name = node.get("name")
+                    formula = node.get("formula")
+                    node_id = node.get("id")
+                    annotated = node.get("annotated")
+                    components.append(
+                        {"boimmg_id": str(node_id), "name": name, "formula": formula}
+                    )
+
+        return components

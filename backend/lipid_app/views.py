@@ -42,7 +42,9 @@ def getLipid_by_SwissLipidsID(request, pk):
 def getLipid_by_Id(request, pk):
     query = Querys()
     l_id = query.get_node_by_ont_id(pk)
-
+    l_id = dict(l_id)
+    components = query.get_components_by_ont_id_rel_type(pk)
+    l_id["components"] = components
     return Response(l_id)
 
 
