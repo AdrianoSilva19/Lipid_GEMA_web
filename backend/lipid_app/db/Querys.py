@@ -6,7 +6,7 @@ import os
 
 class Querys:
     def __init__(self):
-        self.conf = read_conf_file(os.path.dirname(__file__) + "\config\config.conf")
+        self.conf = read_conf_file(os.path.dirname(__file__) + "/config/config.conf")
         self.uri = self.conf["uri"]
         self.user = self.conf["user"]
         self.password = self.conf["password"]

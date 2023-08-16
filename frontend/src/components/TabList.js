@@ -79,15 +79,27 @@ function TabList(props) {
         ))}
         </Row>
       </Tab>
-      <Tab eventKey="Components" title="Components">
-      <Row className="justify-content-center">
-      {lipid.components?.map((component, index) => (
-        <Col key={index} sm={12} md={6} lg={4} xl={4}>
-          <LipidsComponentsList component={component} />
-        </Col>
-      ))}
-      </Row>
-    </Tab>
+      {lipid.generic ? (
+        <Tab eventKey="variants" title="Variants">
+          <Row className="justify-content-center">
+            {lipid.variants?.map((component, index) => (
+              <Col key={index} sm={12} md={6} lg={4} xl={4}>
+                <LipidsComponentsList component={component} />
+              </Col>
+            ))}
+          </Row>
+        </Tab>
+      ) : (
+        <Tab eventKey="components" title="Components">
+          <Row className="justify-content-center">
+            {lipid.components?.map((component, index) => (
+              <Col key={index} sm={12} md={6} lg={4} xl={4}>
+                <LipidsComponentsList component={component} />
+              </Col>
+            ))}
+          </Row>
+        </Tab>
+        )}
     </Tabs>
   );
 }

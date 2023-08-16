@@ -7,27 +7,36 @@ import TabList from '../components/TabList'
 
 
 function LipidScreen() {
-    
-    const lipidId = useParams();
-    const [lipid,setProduct] = useState([]);
+  const { id } = useParams();
+  const [lipid, setLipid] = useState(null);
 
   useEffect(() => {
-    async function fetchProduct(){
-      const {data} = await axios.get(`/api/lipid/L_ID/${lipidId.id}`)
-      setProduct(data)
-    }  
+    async function fetchLipidData() {
+      try {
+        const response = await axios.get(`/api/lipid/L_ID/${id}`);
+        setLipid(response.data);
+      } catch (error) {
+        console.error('Error fetching lipid data:', error);
+      }
+    }
 
-    fetchProduct()
-  },[])
+    fetchLipidData();
+  }, [id]); // Listen for changes in the "id" route parameter
+
   useEffect(() => {
     SmiDrawer.apply(); // Call SmilesDrawer.apply() after rendering the component
   }, [lipid]);
 
+  if (!lipid) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <div className="LipidScreen">
-      <Row style={{ fontSize: '40px', textAlign: 'center',marginTop: '20px', marginBottom: '25px' }}>
-      <h3><strong>{lipid.name}</strong></h3>
+      <Row style={{ fontSize: '40px', textAlign: 'center', marginTop: '20px', marginBottom: '25px' }}>
+        <h3>
+          <strong>{lipid.name}</strong>
+        </h3>
       </Row>
       <Row className="align-content-start">
         <Col>
@@ -43,12 +52,12 @@ function LipidScreen() {
           </Card>
         </Col>
       </Row>
-              
+
       <Row>
         <TabList lipid={lipid} />
         <Link to="/" className="btn btn-light my-3">
-        Go Back
-      </Link>
+          Go Back
+        </Link>
       </Row>
     </div>
   );

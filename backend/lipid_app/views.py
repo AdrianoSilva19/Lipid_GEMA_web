@@ -47,6 +47,7 @@ def getLipid_by_Id(request, pk):
     parents = query.get_parents(pk)
     l_id["parents"] = parents
     l_id["components"] = components
+    l_id["generic"] = eval(l_id["generic"])
     return Response(l_id)
 
 
