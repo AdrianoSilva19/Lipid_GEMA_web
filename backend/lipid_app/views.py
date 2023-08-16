@@ -44,6 +44,8 @@ def getLipid_by_Id(request, pk):
     l_id = query.get_node_by_ont_id(pk)
     l_id = dict(l_id)
     components = query.get_components_by_ont_id_rel_type(pk)
+    parents = query.get_parents(pk)
+    l_id["parents"] = parents
     l_id["components"] = components
     return Response(l_id)
 

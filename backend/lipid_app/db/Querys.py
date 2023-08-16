@@ -113,7 +113,7 @@ class Querys:
             result = session.run(
                 "MATCH (c:Compound)<-[r]-(p:Compound) "
                 "WHERE c.boimmg_id = $ont_id AND TYPE(r) = $rel_type "
-                "RETURN p.boimmg_id as id, p.formula as formula, p.name as name ",
+                "RETURN p.boimmg_id as id, p.formula as formula, p.name as name,p.smiles as smiles ",
                 ont_id=ont_id,
                 rel_type=relationship_type,
             )
@@ -124,9 +124,46 @@ class Querys:
                     name = node.get("name")
                     formula = node.get("formula")
                     node_id = node.get("id")
-                    annotated = node.get("annotated")
+                    smiles = node.get("smiles")
                     components.append(
-                        {"boimmg_id": str(node_id), "name": name, "formula": formula}
+                        {
+                            "boimmg_id": str(node_id),
+                            "name": name,
+                            "formula": formula,
+                            "smiles": smiles,
+                        }
                     )
 
         return components
+
+    def get_parents(self, ont_id: int) -> dict:
+        """Get predecessors using as parameter the database identifier and the relationship type"""
+        self.login()
+        parents = []
+        relationship_type = "is_a"
+        with self.tx.session() as session:
+            result = session.run(
+                "MATCH (c:Compound)-[r]->(p:Compound) "
+                "WHERE c.boimmg_id = $ont_id AND TYPE(r) = $rel_type "
+                "RETURN distinct(p.boimmg_id) as id, p.formula as formula, p.name as name, p.smiles as smiles ",
+                ont_id=ont_id,
+                rel_type=relationship_type,
+            )
+
+            data = result.data()
+            if data:
+                for node in data:
+                    name = node.get("name")
+                    formula = node.get("formula")
+                    node_id = node.get("id")
+                    smiles = node.get("smiles")
+                    parents.append(
+                        {
+                            "boimmg_id": str(node_id),
+                            "name": name,
+                            "formula": formula,
+                            "smiles": smiles,
+                        }
+                    )
+
+        return parents
