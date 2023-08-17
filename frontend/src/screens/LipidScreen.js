@@ -4,6 +4,7 @@ import { Row, Col, ListGroup, Card} from 'react-bootstrap';
 import axios from 'axios';
 import { SmiDrawer } from 'smiles-drawer';
 import TabList from '../components/TabList'
+import Loading from '../components/Loading';
 
 
 function LipidScreen() {
@@ -20,16 +21,20 @@ function LipidScreen() {
       }
     }
 
+   
+    setLipid(null);
     fetchLipidData();
-  }, [id]); // Listen for changes in the "id" route parameter
+  }, [id]); 
 
   useEffect(() => {
-    SmiDrawer.apply(); // Call SmilesDrawer.apply() after rendering the component
+    SmiDrawer.apply(); 
   }, [lipid]);
 
   if (!lipid) {
-    return <p>Loading...</p>;
+    return <Loading />; 
   }
+
+
 
   return (
     <div className="LipidScreen">

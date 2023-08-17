@@ -1,7 +1,8 @@
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import { Row, Col, ListGroup, Card} from 'react-bootstrap';
+import { Row, Col, ListGroup} from 'react-bootstrap';
 import LipidsComponentsList from '../components/LipidComponentsList';
+import LipidsChildrenList from '../components/LipidChildrenList';
 
 function TabList(props) {
     const { lipid } = props;
@@ -80,9 +81,9 @@ function TabList(props) {
         </Row>
       </Tab>
       {lipid.generic ? (
-        <Tab eventKey="variants" title="Variants">
+        <Tab eventKey="children_subclasses" title="Children Subclasses">
           <Row className="justify-content-center">
-            {lipid.variants?.map((component, index) => (
+            {lipid.children_species?.map((component, index) => (
               <Col key={index} sm={12} md={6} lg={4} xl={4}>
                 <LipidsComponentsList component={component} />
               </Col>
@@ -99,6 +100,15 @@ function TabList(props) {
             ))}
           </Row>
         </Tab>
+        )}
+        {lipid.generic && (
+          <Tab eventKey="children" title="Children">
+            <Row className="justify-content-center">
+              <Col>
+                <LipidsChildrenList components={lipid.children} />
+              </Col>
+            </Row>
+          </Tab>
         )}
     </Tabs>
   );

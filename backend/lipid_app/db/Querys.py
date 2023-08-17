@@ -6,7 +6,7 @@ import os
 
 class Querys:
     def __init__(self):
-        self.conf = read_conf_file(os.path.dirname(__file__) + "/config/config.conf")
+        self.conf = read_conf_file(os.path.dirname(__file__) + "\config\config.conf")
         self.uri = self.conf["uri"]
         self.user = self.conf["user"]
         self.password = self.conf["password"]
@@ -167,3 +167,35 @@ class Querys:
                     )
 
         return parents
+
+    def get_children_by_id(self, ont_id, generic):
+        self.login()
+        children = []
+        relationship_type = "is_a"
+        with self.tx.session() as session:
+            result = session.run(
+                "MATCH (c:Compound)-[r]->(d:Compound) "
+                "WHERE d.boimmg_id = $ont_id AND TYPE(r) = $rel_type and c.generic = $generic "
+                "RETURN distinct(c.boimmg_id) as id, c.formula as formula, c.name as name, c.smiles as smiles ",
+                ont_id=ont_id,
+                generic=generic,
+                rel_type=relationship_type,
+            )
+
+            data = result.data()
+            if data:
+                for node in data:
+                    name = node.get("name")
+                    formula = node.get("formula")
+                    node_id = node.get("id")
+                    smiles = node.get("smiles")
+                    children.append(
+                        {
+                            "boimmg_id": str(node_id),
+                            "name": name,
+                            "formula": formula,
+                            "smiles": smiles,
+                        }
+                    )
+
+        return children
