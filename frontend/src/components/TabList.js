@@ -55,17 +55,29 @@ function TabList(props) {
                           </ListGroup.Item>
 
                          <ListGroup.Item variant="Light" style={{ fontSize: '17px', padding: '10px',  textAlign: 'left'}}>
-                            <b style={{ marginRight: '10px' }}>SWISS LIPIDS ID:</b> {lipid.swiss_lipids_id}
+                            <b style={{ marginRight: '10px' }}>SWISS LIPIDS ID:</b>
+                            <a href={`https://www.swisslipids.org/#/entity/${lipid.swiss_lipids_id}/`}  target="_blank" rel="noreferrer">
+                            {lipid.swiss_lipids_id}
+                              </a>  
                           </ListGroup.Item>
                                                     
                           <ListGroup.Item variant="Light" style={{ fontSize: '17px', padding: '10px',  textAlign: 'left'}}>
-                            <b style={{ marginRight: '10px' }}>LIPID MAPS ID:</b> {lipid.lipidmaps_id}
+                            <b style={{ marginRight: '10px' }}>LIPID MAPS ID:</b> 
+                            <a href={`https://www.lipidmaps.org/databases/lmsd/${lipid.lipidmaps_id}/`}  target="_blank" rel="noreferrer">
+                            {lipid.lipidmaps_id}
+                              </a>  
                           </ListGroup.Item>
                           <ListGroup.Item variant="Light" style={{ fontSize: '17px', padding: '10px',  textAlign: 'left'}}>
-                            <b style={{ marginRight: '10px' }}>MODEL SEED ID:</b> {lipid.model_seed_id}
+                            <b style={{ marginRight: '10px' }}>MODEL SEED ID:</b> 
+                            <a href={`https://modelseed.org/biochem/compounds/${lipid.model_seed_id}/`}  target="_blank" rel="noreferrer">
+                            {lipid.model_seed_id}
+                              </a>  
                           </ListGroup.Item>
                           <ListGroup.Item variant="Light" style={{ fontSize: '17px', padding: '10px',  textAlign: 'left'}}>
                             <b style={{ marginRight: '10px' }}>CHEBI ID:</b> {lipid.chebi_id}
+                            <a href={`https://modelseed.org/biochem/compounds/${lipid.chebi_id}/`}  target="_blank" rel="noreferrer">
+                            {lipid.chebi_id}
+                              </a>  
                           </ListGroup.Item>
                       </ListGroup>
                   </Col>
