@@ -5,7 +5,7 @@ import Footer from './components/Footer'
 import LipidsGenerics from './screens/LipidsGenerics'
 import LipidScreen from './screens/LipidScreen'
 import HomeScreen from './screens/HomeScreen'
-
+import AboutScreen from './screens/AboutScreen'
 
 
 function App() {
@@ -19,6 +19,7 @@ function App() {
             <Route path="/class" element={<LipidsGenerics />} />
             <Route path="/lipid/:id" element={<LipidScreen />} />
             <Route path="/" element={<HomeScreen />} />
+            <Route path="/about" element={<AboutScreen />} />
           </Routes>
         </Container>
       </main>

@@ -18,26 +18,36 @@ function TabList(props) {
               <Col style={{marginTop: '15px'}}>
                       <ListGroup variant="secondary">
                          <ListGroup.Item variant="Light" style={{ fontSize: '17px', padding: '10px',  textAlign: 'left'}}>
-                            <b style={{ marginRight: '10px' }}>FORMULA:</b> {lipid.formula}
+                          
+                            <b style={{ marginRight: '10px' }}>FORMULA:</b> 
+                            
+                            {lipid.formula !== undefined ?( 
+                              <a>{lipid.formula}</a> ): "NaN"}
+
                           </ListGroup.Item>
 
                          <ListGroup.Item variant="Light" style={{ fontSize: '17px', padding: '10px',  textAlign: 'left'}}>
-                            <b style={{ marginRight: '10px' }}>CHARGE:</b> {lipid.charge}
+                            <b style={{ marginRight: '10px' }}>CHARGE:</b>  {lipid.charge !== undefined ?( 
+                              <a>{lipid.charge}</a>): "NaN"}
                           </ListGroup.Item>
                                                     
                           <ListGroup.Item variant="Light" style={{ fontSize: '17px', padding: '10px',  textAlign: 'left'}}>
-                            <b style={{ marginRight: '10px' }}>SMILES:</b> {lipid.smiles}
+                            <b style={{ marginRight: '10px' }}>SMILES:</b>  {lipid.smiles !== undefined ?( 
+                              <a>{lipid.smiles} </a>): "NaN"}
                           </ListGroup.Item>
                           <ListGroup.Item variant="Light" style={{ fontSize: '17px', padding: '10px',  textAlign: 'left'}}>
-                            <b style={{ marginRight: '10px' }}>INCHI:</b> {lipid.Inchi}
+                            <b style={{ marginRight: '10px' }}>INCHI:</b> {lipid.inchi !== undefined ?( 
+                              <a>{lipid.inchi} </a>): "NaN"}
                           </ListGroup.Item>
 
                           <ListGroup.Item variant="Light" style={{ fontSize: '17px', padding: '10px',  textAlign: 'left' }}>
-                            <b style={{ marginRight: '10px' }}>INCHIKEY:</b> {lipid.inchikey}
+                            <b style={{ marginRight: '10px' }}>INCHIKEY:</b>  {lipid.inchikey !== undefined ?( 
+                              <a>{lipid.inchikey}</a> ): "NaN"}
                           </ListGroup.Item>
                           
                           <ListGroup.Item variant="Light" style={{ fontSize: '17px', padding: '10px',  textAlign: 'left'}}>
-                            <b style={{ marginRight: '10px' }}>MASS:</b> {lipid.mass}
+                            <b style={{ marginRight: '10px' }}>MASS:</b> {lipid.mass !== undefined ?( 
+                              <a>{lipid.mass}</a> ): "NaN"}
                           </ListGroup.Item>
 
                           
@@ -56,28 +66,36 @@ function TabList(props) {
 
                          <ListGroup.Item variant="Light" style={{ fontSize: '17px', padding: '10px',  textAlign: 'left'}}>
                             <b style={{ marginRight: '10px' }}>SWISS LIPIDS ID:</b>
-                            <a href={`https://www.swisslipids.org/#/entity/${lipid.swiss_lipids_id}/`}  target="_blank" rel="noreferrer">
+                            {lipid.swiss_lipids_id !== undefined ?(
+                            <a href={`https://www.swisslipids.org/#/entity/${lipid.swiss_lipids_id}/`}  target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
                             {lipid.swiss_lipids_id}
                               </a>  
+                               ): "NaN"}
                           </ListGroup.Item>
                                                     
                           <ListGroup.Item variant="Light" style={{ fontSize: '17px', padding: '10px',  textAlign: 'left'}}>
                             <b style={{ marginRight: '10px' }}>LIPID MAPS ID:</b> 
-                            <a href={`https://www.lipidmaps.org/databases/lmsd/${lipid.lipidmaps_id}/`}  target="_blank" rel="noreferrer">
+                            {lipid.lipidmaps_id !== undefined ?(
+                            <a href={`https://www.lipidmaps.org/databases/lmsd/${lipid.lipidmaps_id}/`}  target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
                             {lipid.lipidmaps_id}
                               </a>  
+                               ): "NaN"}
                           </ListGroup.Item>
                           <ListGroup.Item variant="Light" style={{ fontSize: '17px', padding: '10px',  textAlign: 'left'}}>
                             <b style={{ marginRight: '10px' }}>MODEL SEED ID:</b> 
-                            <a href={`https://modelseed.org/biochem/compounds/${lipid.model_seed_id}/`}  target="_blank" rel="noreferrer">
-                            {lipid.model_seed_id}
-                              </a>  
+                            {lipid.model_seed_id !== undefined ? (
+                                <a href={`https://modelseed.org/biochem/compounds/${lipid.model_seed_id}/`} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
+                                    {lipid.model_seed_id}
+                                </a>
+                            ) : "NaN"} 
                           </ListGroup.Item>
                           <ListGroup.Item variant="Light" style={{ fontSize: '17px', padding: '10px',  textAlign: 'left'}}>
-                            <b style={{ marginRight: '10px' }}>CHEBI ID:</b> {lipid.chebi_id}
-                            <a href={`https://modelseed.org/biochem/compounds/${lipid.chebi_id}/`}  target="_blank" rel="noreferrer">
+                            <b style={{ marginRight: '10px' }}>CHEBI ID:</b>
+                            {lipid.chebi_id !== undefined ?(
+                            <a href={`https://modelseed.org/biochem/compounds/${lipid.chebi_id}/`}  target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
                             {lipid.chebi_id}
                               </a>  
+                              ): "NaN"}
                           </ListGroup.Item>
                       </ListGroup>
                   </Col>
