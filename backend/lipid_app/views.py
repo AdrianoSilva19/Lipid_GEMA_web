@@ -5,6 +5,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .dummy_data import generics
 from .db.Querys import Querys
+from .tool.statistic_info import Tool
 
 # Create your views here.
 
@@ -60,3 +61,32 @@ def getLipid_by_LipidMapsID(request, pk):
     lm_id = query.get_node_from_lipid_maps_id(pk)
 
     return Response(lm_id)
+
+
+@api_view(["POST"])
+def upload_gsm_model(request):
+    if request.method == "POST" and request.FILES.get("gsmModel"):
+        uploaded_file = request.FILES["gsmModel"]
+
+        # Save the uploaded file in the desired location (in the same directory as your tool)
+        file_path = f"lipid_app/tool/models/{uploaded_file.name}"
+        with open(file_path, "wb+") as destination:
+            for chunk in uploaded_file.chunks():
+                destination.write(chunk)
+
+        results_path = Tool.annotate_model(file_path)
+
+        try:
+            with open(results_path, "r") as results_file:
+                results_data = results_file.readlines()
+
+            results_dict = {}
+            for line in results_data:
+                parts = line.strip().split(" ")
+                key = parts[0]
+                values = [part.split(",") for part in parts[1:]]
+                results_dict[key] = values
+
+            return Response(results_dict)
+        except FileNotFoundError:
+            return JsonResponse({"message": "Results file not found"}, status=404)
