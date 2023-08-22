@@ -9,4 +9,5 @@ urlpatterns = [
     path("lipid/L_ID/<int:pk>/", views.getLipid_by_Id, name="l_id"),
     path("lipid/LM_ID/<pk>/", views.getLipid_by_LipidMapsID, name="lm_id"),
     path("upload/", views.upload_gsm_model, name="upload_gsm_model"),
+    path("model/<pk>", views.getAnnotations, name="annotations"),
 ]

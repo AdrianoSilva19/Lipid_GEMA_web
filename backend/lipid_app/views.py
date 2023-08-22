@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from .dummy_data import generics
 from .db.Querys import Querys
 from .tool.statistic_info import Tool
+import json
 
 # Create your views here.
 
@@ -81,12 +82,20 @@ def upload_gsm_model(request):
                 results_data = results_file.readlines()
 
             results_dict = {}
-            for line in results_data:
-                parts = line.strip().split(" ")
-                key = parts[0]
-                values = [part.split(",") for part in parts[1:]]
-                results_dict[key] = values
+            for item in results_data:
+                key, values = item.strip().split(" ", 1)
+                values = values.replace(
+                    "'", '"'
+                )  # Convert single quotes to double quotes for valid JSON
+                results_dict[key] = json.loads(values)
 
             return Response(results_dict)
         except FileNotFoundError:
             return JsonResponse({"message": "Results file not found"}, status=404)
+
+
+@api_view(["GET"])
+def getAnnotations(request, pk):
+    annotations = {annotated: {}, sugested: {}}
+
+    return Response(annotations)
