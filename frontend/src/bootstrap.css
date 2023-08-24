@@ -44,7 +44,7 @@
   --bs-warning: #ffce67;
   --bs-danger: #ff7851;
   --bs-light: #f8f9fa;
-  --bs-dark: #343a40;
+  --bs-dark: #2c493a;
   --bs-primary-rgb: 120, 194, 173;
   --bs-secondary-rgb: 243, 150, 154;
   --bs-success-rgb: 86, 204, 157;
@@ -2000,9 +2000,9 @@ progress {
   --bs-table-color: #fff;
   --bs-table-bg: #ffce67;
   --bs-table-border-color: #ffd376;
-  --bs-table-striped-bg: #ffd06f;
+  --bs-table-striped-bg: #faa9ade1;
   --bs-table-striped-color: #000;
-  --bs-table-active-bg: #ffd376;
+  --bs-table-active-bg: #ddc48e;
   --bs-table-active-color: #000;
   --bs-table-hover-bg: #ffd272;
   --bs-table-hover-color: #000;

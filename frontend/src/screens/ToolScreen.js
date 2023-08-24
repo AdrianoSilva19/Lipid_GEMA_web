@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import ResultsList from '../components/ResultsList';
-import ExtendableTable from '../components/ResultsList';
 import Button from 'react-bootstrap/Button';
 import { Container } from 'react-bootstrap';
 import Col from 'react-bootstrap/Col';
@@ -97,7 +95,7 @@ class ToolScreen extends Component {
         )}
         <Row>
           <Col style={{ fontSize: '20px', textAlign: 'center', width: '100%' }}>
-            {resultsData && <Link to={`/model/${selectedFileName.replace('.xml', '')}`} style={{ textDecoration: 'none', marginTop: "20px" }} className="btn btn-light my-3">
+            {resultsData && <Link to={`/model/${selectedFileName.replace('.xml', '')}`} style={{ textDecoration: 'none', marginTop: "20px" }} className="btn btn-primary mb-0">
               See Annotations
             </Link>}
           </Col>
