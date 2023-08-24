@@ -98,17 +98,21 @@ def getAnnotations(request, pk):
         values = values.replace("'", '"')
         results_dict[key] = json.loads(values)
 
-    annotations_dict = {"annotated": {}, "suggested": {}}
+    annotations_dict = {"annotated": {}, "suggested_annotation": {}}
 
     for key, value in results_dict.items():
         if len(value[0]) <= 1 and len(value[1]) <= 1:
             annotations_dict["annotated"][key] = value
         else:
-            annotations_dict["suggested"][key] = value
+            annotations_dict["suggested_annotation"][key] = value
 
     if annotations_dict["annotated"]:
         annotations_dict["annotated"] = query.get_lipid_gema_ID(
             annotations_dict["annotated"]
         )
+    print(annotations_dict)
+    Tool.create_annotated_file(
+        model_id=model_id, annotated_dict=annotations_dict["annotated"]
+    )
 
     return Response(annotations_dict)
