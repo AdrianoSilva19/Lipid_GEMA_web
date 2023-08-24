@@ -199,3 +199,23 @@ class Querys:
                     )
 
         return children
+
+    def get_lipid_gema_ID(self, annotations_list):
+        for key, value in annotations_list.items():
+            lm_annotation = value[0]
+            sl_annotation = value[1]
+
+            new_values = []  # Create a new list for the added values
+
+            if lm_annotation is not None:
+                for _id in lm_annotation:
+                    lg_id = self.get_node_from_lipid_maps_id(_id)
+                    new_values.append(lg_id.id)
+            else:
+                for _id in sl_annotation:
+                    lg_id = self.get_node_from_swiss_lipids_id(_id)
+                    new_values.append(lg_id.id)
+
+            # Extend the existing value list with the new_values list
+            value.extend(new_values)
+        return annotations_list

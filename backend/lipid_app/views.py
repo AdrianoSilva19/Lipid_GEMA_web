@@ -7,6 +7,7 @@ from .dummy_data import generics
 from .db.Querys import Querys
 from .tool.statistic_info import Tool
 import json
+from cobra.io import read_sbml_model, write_sbml_model
 
 # Create your views here.
 
@@ -69,7 +70,6 @@ def upload_gsm_model(request):
     if request.method == "POST" and request.FILES.get("gsmModel"):
         uploaded_file = request.FILES["gsmModel"]
 
-        # Save the uploaded file in the desired location (in the same directory as your tool)
         file_path = f"lipid_app/tool/models/{uploaded_file.name}"
         with open(file_path, "wb+") as destination:
             for chunk in uploaded_file.chunks():
@@ -77,25 +77,38 @@ def upload_gsm_model(request):
 
         results_path = Tool.annotate_model(file_path)
 
-        try:
-            with open(results_path, "r") as results_file:
-                results_data = results_file.readlines()
-
-            results_dict = {}
-            for item in results_data:
-                key, values = item.strip().split(" ", 1)
-                values = values.replace(
-                    "'", '"'
-                )  # Convert single quotes to double quotes for valid JSON
-                results_dict[key] = json.loads(values)
-
-            return Response(results_dict)
-        except FileNotFoundError:
-            return JsonResponse({"message": "Results file not found"}, status=404)
+        return JsonResponse({"message": "Sucessfully Annotated"})
 
 
 @api_view(["GET"])
 def getAnnotations(request, pk):
-    annotations = {annotated: {}, sugested: {}}
+    query = Querys()
+    model_path = f"lipid_app/tool/models/{pk}.xml"
+    model = read_sbml_model(model_path)
+    model_id = model.id
+    if model_id == "":
+        model_id = "unidentified"
+    annotations_path = f"lipid_app/tool/results/{model_id}.txt"
+    with open(annotations_path, "r") as results_file:
+        results_data = results_file.readlines()
 
-    return Response(annotations)
+    results_dict = {}
+    for item in results_data:
+        key, values = item.strip().split(" ", 1)
+        values = values.replace("'", '"')
+        results_dict[key] = json.loads(values)
+
+    annotations_dict = {"annotated": {}, "suggested": {}}
+
+    for key, value in results_dict.items():
+        if len(value[0]) <= 1 and len(value[1]) <= 1:
+            annotations_dict["annotated"][key] = value
+        else:
+            annotations_dict["suggested"][key] = value
+
+    if annotations_dict["annotated"]:
+        annotations_dict["annotated"] = query.get_lipid_gema_ID(
+            annotations_dict["annotated"]
+        )
+
+    return Response(annotations_dict)

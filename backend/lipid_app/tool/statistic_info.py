@@ -17,7 +17,7 @@ class Tool:
         info = annotator.find_model_lipids(model)
         model_id = model.id
         if model_id == "":
-            model_id = "iBD1106"
+            model_id = "unidentified"
         lipids_class = pd.Series(info[0])
         lipids_class = pd.DataFrame(lipids_class)
         original_annotations = pd.Series(info[1])
