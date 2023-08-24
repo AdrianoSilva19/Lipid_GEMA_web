@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Row, Container } from 'react-bootstrap';
 import ReactLoading from 'react-loading';
 import AnnotatedTable from '../components/AnnotatedCard'; 
+import SugestedAnnotationCard from '../components/SugestedAnnotationCard'; 
 
 function ModelScreen() {
   const { model_id } = useParams();
@@ -49,11 +50,7 @@ function ModelScreen() {
               <h3>Suggested</h3>
               <h6>Please select the right conformation on the <b>Suggested</b> annotations to annotate your <b>{model_id}</b> GSM model!</h6>
               <ul>
-                {Object.keys(lipid.suggested).map((key) => (
-                  <li key={key}>
-                    {key}: {lipid.suggested[key]}
-                  </li>
-                ))}
+              <SugestedAnnotationCard suggested_list={lipid} model_id={model_id} />
               </ul>
             </div>
           )}
