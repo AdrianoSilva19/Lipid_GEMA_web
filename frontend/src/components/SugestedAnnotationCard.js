@@ -10,14 +10,14 @@ function SuggestedLipidsCards({ suggested_list, model_id }) {
       <Row className="justify-content-center">
         {suggestedKeys.map((key) => (
           <Col key={key} sm={12} md={6} lg={4} xl={3}>
-            <SuggestedLipid lipidKey={key} sugested_list={suggested_list.suggested_annotation} model_id={model_id} />
+            <SuggestedLipid lipidKey={key} model_id={model_id} />
           </Col>
         ))}
       </Row>
     );
   }
   
-  function SuggestedLipid({ lipidKey,sugested_list,model_id}) {
+  function SuggestedLipid({ lipidKey,model_id}) {
     const [switchState, setSwitchState] = useState(false);
   
     const handleSwitchChange = () => {

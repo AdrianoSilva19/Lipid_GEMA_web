@@ -7,7 +7,7 @@ from .dummy_data import generics
 from .db.Querys import Querys
 from .tool.statistic_info import Tool
 import json
-from cobra.io import read_sbml_model, write_sbml_model
+import ast
 
 # Create your views here.
 
@@ -75,7 +75,7 @@ def upload_gsm_model(request):
             for chunk in uploaded_file.chunks():
                 destination.write(chunk)
 
-        results_path = Tool.annotate_model(file_path)
+        Tool.annotate_model(uploaded_file.name)
 
         return JsonResponse({"message": "Sucessfully Annotated"})
 
@@ -83,12 +83,7 @@ def upload_gsm_model(request):
 @api_view(["GET"])
 def getAnnotations(request, pk):
     query = Querys()
-    model_path = f"lipid_app/tool/models/{pk}.xml"
-    model = read_sbml_model(model_path)
-    model_id = model.id
-    if model_id == "":
-        model_id = "unidentified"
-    annotations_path = f"lipid_app/tool/results/{model_id}.txt"
+    annotations_path = f"lipid_app/tool/results/{pk}.txt"
     with open(annotations_path, "r") as results_file:
         results_data = results_file.readlines()
 
@@ -110,12 +105,23 @@ def getAnnotations(request, pk):
         annotations_dict["annotated"] = query.get_lipid_gema_ID(
             annotations_dict["annotated"]
         )
-    print(annotations_dict)
     Tool.create_annotated_file(
-        model_id=model_id, annotated_dict=annotations_dict["annotated"]
+        model_id=pk, annotated_dict=annotations_dict["annotated"]
     )
     Tool.create_suggested_annotations_file(
-        model_id=model_id, annotated_dict=annotations_dict["suggested_annotation"]
+        model_id=pk, annotated_dict=annotations_dict["suggested_annotation"]
     )
 
     return Response(annotations_dict)
+
+
+@api_view(["GET"])
+def getSuggestedAnnotation(request, pk, sk):
+    annotations_path = f"lipid_app/tool/results/{pk}_suggested_annotations.conf"
+
+    lipid_annotations_list = Tool.get_lipid_suggested_annotations(pk, sk)
+    values = ast.literal_eval(lipid_annotations_list)
+    for value in values:
+        print(value)
+
+    return Response(values)
