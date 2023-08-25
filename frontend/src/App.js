@@ -8,6 +8,7 @@ import HomeScreen from './screens/HomeScreen'
 import AboutScreen from './screens/AboutScreen'
 import ToolScreen from './screens/ToolScreen';
 import ModelScreen from './screens/ModelScreen';
+import SugestedScreen from './screens/SugestedScreen';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path="/about" element={<AboutScreen />} />
             <Route path="/tool" element={<ToolScreen />} />
             <Route path="/model/:model_id" element={<ModelScreen />} />
+            <Route path="/model/:model_id/:lipidKey" element={<SugestedScreen />} />
           </Routes>
         </Container>
       </main>

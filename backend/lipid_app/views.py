@@ -114,5 +114,8 @@ def getAnnotations(request, pk):
     Tool.create_annotated_file(
         model_id=model_id, annotated_dict=annotations_dict["annotated"]
     )
+    Tool.create_suggested_annotations_file(
+        model_id=model_id, annotated_dict=annotations_dict["suggested_annotation"]
+    )
 
     return Response(annotations_dict)

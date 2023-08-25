@@ -6,10 +6,16 @@ from lipid_app.tool._utils import transform_boimmg_id_in_annotation_id
 
 class Tool:
     def create_annotated_file(model_id, annotated_dict):
-        path_txt = f"lipid_app/tool/results/{model_id}_annotated.txt"
-        output = open(path_txt, "w")
+        path_txt = f"lipid_app/tool/results/{model_id}_annotated.conf"
+        conf = open(path_txt, "w")
         for k, v in annotated_dict.items():
-            output.writelines(f"{k} {v}\n")
+            conf.write(k + "=" + str(v) + "\n")
+
+    def create_suggested_annotations_file(model_id, annotated_dict):
+        path_txt = f"lipid_app/tool/results/{model_id}_suggested_annotations.conf"
+        conf = open(path_txt, "w")
+        for k, v in annotated_dict.items():
+            conf.write(k + "=" + str(v) + "\n")
 
     def annotate_model(path):
         """Function that gets all statisticall information from LipidNameAnnotator class relative to lipids class caugth and number of lipids annotated.

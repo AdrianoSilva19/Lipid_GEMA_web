@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Row, Col, Card } from 'react-bootstrap'; // Assuming you're using Bootstrap
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 
 function SuggestedLipidsCards({ suggested_list, model_id }) {
@@ -10,7 +10,7 @@ function SuggestedLipidsCards({ suggested_list, model_id }) {
       <Row className="justify-content-center">
         {suggestedKeys.map((key) => (
           <Col key={key} sm={12} md={6} lg={4} xl={3}>
-            <SuggestedLipid lipidKey={key} sugested_list={suggested_list.suggested_annotation[key]} model_id={model_id} />
+            <SuggestedLipid lipidKey={key} sugested_list={suggested_list.suggested_annotation} model_id={model_id} />
           </Col>
         ))}
       </Row>
@@ -30,7 +30,7 @@ function SuggestedLipidsCards({ suggested_list, model_id }) {
         style={{ width: '15rem', borderWidth: '1px' }}
       >
         <Card.Body className="d-flex flex-column align-items-center">
-        <Link to={`/model/${model_id}/sugested/${lipidKey}`} annotated_list={sugested_list} target="_blank" style={{ textDecoration: 'none' }}>
+        <Link to={`/model/${model_id}/${lipidKey}`}  target="_blank" style={{ textDecoration: 'none' }}>
           <Card.Title as="div" className="text-center mb-2">
             <strong>{lipidKey}</strong>
           </Card.Title>
