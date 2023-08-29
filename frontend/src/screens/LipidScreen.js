@@ -46,7 +46,6 @@ function LipidScreen() {
       <Row className="align-content-start">
         <Col>
           <Card className="my-3 p-3 rounded" border="Light" style={{ width: '100%', borderWidth: '1px', height: '22rem' }}>
-            {/* Display lipid image */}
             <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               <Card.Img
                 data-smiles={lipid.smiles}

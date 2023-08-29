@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link  } from 'react-router-dom';
 import axios from 'axios';
 import { Row, Container } from 'react-bootstrap';
 import ReactLoading from 'react-loading';
@@ -8,10 +8,12 @@ import SugestedAnnotationCard from '../components/SugestedAnnotationCard';
 import { useLipidData } from'../components/LipidDataContext'
 
 
+
 function ModelScreen() {
   const { model_id } = useParams();
   const { lipidData, setLipidData } = useLipidData(); // Get context data
   const [isLoading, setIsLoading] = useState(true);
+  const [isDownloaded, setIsDownloaded] = useState(false);
 
   useEffect(() => {
     async function fetchLipidData() {
@@ -32,6 +34,28 @@ function ModelScreen() {
     fetchLipidData();
   }, [model_id, lipidData, setLipidData]);
 
+
+
+  const handleDownloadClick = async () => {
+    try {
+      const response = await axios.get(`/api/download/model/${model_id}`, {
+        responseType: 'blob', 
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `${model_id}_annotated.xml`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      setIsDownloaded(true); // Set the state to show the download message
+    } catch (error) {
+      console.error('Error downloading model:', error);
+    }
+  };
+
   return (
     <div>
       {isLoading ? ( // Render loading animation if still loading
@@ -51,14 +75,39 @@ function ModelScreen() {
       ) : (
         <div>
           {lipidData[model_id] && (
-            <div>
-              <h3>Annotated</h3>
+            <div style={{ borderBottom: '1.3px solid #ccc'  }}> 
+              <Container>
+                  <Row style={{ fontSize: '40px', textAlign: 'center',marginBottom: '20px',marginTop: "20px",}}>
+                    <strong>Annotated</strong>
+                  </Row>
+              </Container>
               <AnnotatedTable lipid={lipidData[model_id]} />
-              <h3>Suggested</h3>
-              <h6>Please select the right conformation on the <b>Suggested</b> annotations to annotate your <b>{model_id}</b> GSM model!</h6>
+              <Container>
+                  <Row style={{ fontSize: '40px', textAlign: 'center',marginBottom: '20px',marginTop: "20px"}}>
+                    <strong>Suggested</strong>
+                  </Row>
+              </Container>
+              <h6 style={{ fontSize: '20px', textAlign: 'center',padding: '30px 0', marginBottom: '10px',borderBottom: '1.3px solid #ccc' }}>Please select the right conformation on the <b>Suggested</b> annotations to annotate your <b>{model_id}</b> GSM model!</h6>
               <ul>
               <SugestedAnnotationCard suggested_list={lipidData[model_id]} model_id={model_id} />
               </ul>
+            </div >
+          )}
+          {isDownloaded && ( // Display the message and link after download
+            <div style={{ textAlign: 'center', marginTop: '25px', marginBottom: '20px' }}>
+              <p>Your annotated model has been downloaded.
+                Check the downloads folder.
+              </p>
+              <Link to="/tool" className="btn btn-primary">
+                Go to Tool Page
+              </Link>
+            </div>
+          )}
+          {!isDownloaded && ( // Display the download button if not downloaded
+            <div style={{ textAlign: 'center', marginTop: '25px', marginBottom: '20px' }}>
+              <button onClick={handleDownloadClick} className="btn btn-primary">
+                Download Annotated Model
+              </button>
             </div>
           )}
         </div>

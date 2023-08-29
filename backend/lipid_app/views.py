@@ -7,8 +7,12 @@ from .dummy_data import generics
 from .db.Querys import Querys
 from .tool.statistic_info import Tool
 from cobra.io import read_sbml_model
+from django.http import HttpResponse
+from rest_framework import status
+import mimetypes
 import json
 import ast
+import os
 
 # Create your views here.
 
@@ -150,3 +154,36 @@ def set_model_annotations(request):
     tool.set_sugested_lipid_metabolite_annotation(annotations, model_id, lipid_key)
 
     return JsonResponse({"message": "Successfully Annotated"})
+
+
+@api_view(["GET"])
+def getDownloadModel(request, pk):
+    model_path = f"lipid_app/tool/results/{pk}_annotated.xml"
+
+    # fill these variables with real values
+    fl_path = f"lipid_app/tool/results/{pk}_annotated.xml"
+    filename = f"{pk}_annotated.xml"
+
+    fl = open(fl_path, "r")
+    mime_type, _ = mimetypes.guess_type(fl_path)
+    response = HttpResponse(fl, content_type=mime_type)
+    response["Content-Disposition"] = "attachment; filename=%s" % filename
+    deleteFiles(pk)
+    return response
+
+
+def deleteFiles(pk):
+    file_paths = [
+        f"lipid_app/tool/results/{pk}_annotated.xml",
+        f"lipid_app/tool/results/{pk}.txt",
+        f"lipid_app/tool/results/{pk}_suggested_annotations.conf",
+        f"lipid_app/tool/results/{pk}_annotated.conf",
+        f"lipid_app/tool/models/{pk}.xml",
+    ]
+
+    for file_path in file_paths:
+        try:
+            os.remove(file_path)
+            print(f"File {file_path} deleted successfully.")
+        except OSError as e:
+            print(f"Error deleting {file_path}: {e}")

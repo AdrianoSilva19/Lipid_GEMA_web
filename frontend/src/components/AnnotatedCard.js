@@ -60,7 +60,7 @@ function AnnotatedTable({ lipid }) {
           ))}
         </tbody>
       </Table>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+      <div  style={{ textAlign: 'center' }}>
         <ul className="pagination">
           <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
             <button className="page-link" onClick={() => setCurrentPage(currentPage - 1)}>

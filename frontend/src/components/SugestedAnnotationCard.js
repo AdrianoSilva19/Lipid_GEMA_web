@@ -40,7 +40,7 @@ function SuggestedLipidsCards({ suggested_list, model_id }) {
           </Col>
         ))}
       </Row>
-      <Pagination className="justify-content-center mt-4">
+      <Pagination  style={{ textAlign: 'center' }}>
         <Pagination.Prev onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1} />
         {Array.from({ length: Math.ceil(suggestedKeys.length / cardsPerPage) }).map((_, index) => (
           <Pagination.Item
