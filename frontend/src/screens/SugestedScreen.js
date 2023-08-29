@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import axios from 'axios';
@@ -6,9 +6,15 @@ import Lipid_submit from '../components/Lipid_submit';
 import { Row, Col, ListGroup } from 'react-bootstrap';
 
 function SugestedScreen() {
+  const navigate = useNavigate();  
   const { model_id, lipidKey } = useParams();
   const [annotations, setSuggested_annotations] = useState(null);
   const [lipids_list, setSuggested_lipids] = useState(null);
+
+  const handleGoBack = () => {
+    navigate(-1); // Navigate back to the previous page
+  };
+
 
   useEffect(() => {
     async function fetchSuggested_annotations() {
@@ -72,6 +78,7 @@ function SugestedScreen() {
               <strong>{lipidKey}</strong>
             </ListGroup.Item>
           </ListGroup>
+          <button onClick={handleGoBack} className="btn btn-light my-3">Go Back</button>
         </Row>
       </Container>
       <Container>
@@ -80,12 +87,13 @@ function SugestedScreen() {
             lipids_list.map((lipidSublist, sublistIndex) => (
               lipidSublist.map((lipid) => (
                 <Col key={lipid.boimmg_id} sm={12} md={6} lg={4} xl={4}>
-                <Lipid_submit key={lipid.boimmg_id} lipid={lipid} />
+                <Lipid_submit key={lipid.boimmg_id} lipid={lipid} lipidKey={lipidKey} model_id={model_id} />
                 </Col>
               ))
             ))
+            
           ) : (
-            <div>Loading...</div>
+            <div>Creating Images...</div>
           )}
         </Row>
       </Container>

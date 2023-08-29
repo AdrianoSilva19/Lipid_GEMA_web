@@ -5,7 +5,6 @@ from neo4j import GraphDatabase
 from collections import defaultdict
 from collections import Counter
 from lipid_app.tool._utils import read_conf_file
-from lipid_app.tool._utils import set_metabolite_annotation_in_model
 from joblib import Parallel, delayed
 from typing import List, Tuple, Dict
 from cobra import Model, Metabolite
@@ -30,7 +29,7 @@ class LipidNameAnnotator:
         :return: session linkage to remote database
         :rtype:
         """
-        conf = read_conf_file(os.path.dirname(__file__) + "\config\config.conf")
+        conf = read_conf_file(os.path.dirname(__file__) + "/config/config.conf")
         uri = conf["uri"]
         user = conf["user"]
         password = conf["password"]
@@ -99,7 +98,6 @@ class LipidNameAnnotator:
             for i in tqdm(range(n_iterations))
         )
         self.treat_data(resultados)
-        # final_model = set_metabolite_annotation_in_model(self.login(), self.results, model)
 
         return (
             self.converted_lipid_class_dict,
