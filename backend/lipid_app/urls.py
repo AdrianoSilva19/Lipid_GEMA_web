@@ -10,4 +10,10 @@ urlpatterns = [
     path("lipid/LM_ID/<pk>/", views.getLipid_by_LipidMapsID, name="lm_id"),
     path("upload/", views.upload_gsm_model, name="upload_gsm_model"),
     path("model/<pk>", views.getAnnotations, name="annotations"),
+    path("model/<pk>/<sk>", views.getSuggestedAnnotation, name="suggested_annotation"),
+    path(
+        "set_model_annotations/",
+        views.set_model_annotations,
+        name="set_model_annotations",
+    ),
 ]

@@ -6,7 +6,7 @@ import os
 
 class Querys:
     def __init__(self):
-        self.conf = read_conf_file(os.path.dirname(__file__) + "\config\config.conf")
+        self.conf = read_conf_file(os.path.dirname(__file__) + "/config/config.conf")
         self.uri = self.conf["uri"]
         self.user = self.conf["user"]
         self.password = self.conf["password"]
@@ -204,10 +204,9 @@ class Querys:
         for key, value in annotations_list.items():
             lm_annotation = value[0]
             sl_annotation = value[1]
-
             new_values = []  # Create a new list for the added values
 
-            if lm_annotation is not None:
+            if lm_annotation != []:
                 for _id in lm_annotation:
                     lg_id = self.get_node_from_lipid_maps_id(_id)
                     new_values.append(lg_id.id)

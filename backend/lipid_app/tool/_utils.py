@@ -69,7 +69,7 @@ def set_metabolite_annotation_in_model(
 
 
 def transform_boimmg_id_in_annotation_id(dictionary_results: Dict) -> Dict:
-    conf = read_conf_file(os.path.dirname(__file__) + "\config\config.conf")
+    conf = read_conf_file(os.path.dirname(__file__) + "/config/config.conf")
     uri = conf["uri"]
     user = conf["user"]
     password = conf["password"]

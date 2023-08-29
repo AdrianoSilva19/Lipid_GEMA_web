@@ -7,12 +7,12 @@ function AnnotatedTable({ lipid }) {
   const [currentPage, setCurrentPage] = useState(1);
 
   const data = Object.entries(lipid.annotated).map(([key, [lmValues, slValues, lipid_gema_id]]) => (
-    lmValues.map((lmValue, index) => ({
+    {
       id: key,
-      lmValue,
-      slValue: slValues[index],
+      lmValue: lmValues.length > 0 ? lmValues[0] : 'No Value',
+      slValue:  slValues.length > 0 ? slValues[0] : 'No Value',
       lipidGemaID: lipid_gema_id
-    }))
+    }
   )).flat();
 
   const totalPages = Math.ceil(data.length / itemsPerPage);
@@ -36,10 +36,22 @@ function AnnotatedTable({ lipid }) {
             <tr key={index}>
               <td>{id}</td>
               <td>
-                <Link to={`https://www.lipidmaps.org/databases/lmsd/${lmValue}/`} target="_blank" style={{ textDecoration: 'none' }} >{lmValue}</Link>
+              {lmValue !== 'No Value' ? (
+                  <Link to={`https://www.lipidmaps.org/databases/lmsd/${lmValue}/`} target="_blank" style={{ textDecoration: 'none' }}>
+                    {lmValue}
+                  </Link>
+                ) : (
+                  lmValue
+                )}
               </td>
               <td>
-                <Link to={`https://www.swisslipids.org/#/entity/${slValue}/`} target="_blank" style={{ textDecoration: 'none' }}>{slValue}</Link>
+              {slValue !== 'No Value' ? (
+                  <Link to={`https://www.swisslipids.org/#/entity/${slValue}/`} target="_blank" style={{ textDecoration: 'none' }}>
+                    {slValue}
+                  </Link>
+                ) : (
+                  slValue
+                )}
               </td>
               <td>
                 <Link to={`/lipid/${lipidGemaID}`} target="_blank" style={{ textDecoration: 'none' }}>{lipidGemaID}</Link>

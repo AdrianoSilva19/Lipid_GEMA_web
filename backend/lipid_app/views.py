@@ -6,8 +6,9 @@ from rest_framework.response import Response
 from .dummy_data import generics
 from .db.Querys import Querys
 from .tool.statistic_info import Tool
+from cobra.io import read_sbml_model
 import json
-from cobra.io import read_sbml_model, write_sbml_model
+import ast
 
 # Create your views here.
 
@@ -67,6 +68,7 @@ def getLipid_by_LipidMapsID(request, pk):
 
 @api_view(["POST"])
 def upload_gsm_model(request):
+    tool = Tool()
     if request.method == "POST" and request.FILES.get("gsmModel"):
         uploaded_file = request.FILES["gsmModel"]
 
@@ -75,20 +77,18 @@ def upload_gsm_model(request):
             for chunk in uploaded_file.chunks():
                 destination.write(chunk)
 
-        results_path = Tool.annotate_model(file_path)
+        tool.annotate_model(uploaded_file.name)
 
         return JsonResponse({"message": "Sucessfully Annotated"})
 
 
 @api_view(["GET"])
 def getAnnotations(request, pk):
+    tool = Tool()
     query = Querys()
-    model_path = f"lipid_app/tool/models/{pk}.xml"
-    model = read_sbml_model(model_path)
-    model_id = model.id
-    if model_id == "":
-        model_id = "unidentified"
-    annotations_path = f"lipid_app/tool/results/{model_id}.txt"
+    path = f"lipid_app/tool/models/{pk}.xml"
+    model = read_sbml_model(path)
+    annotations_path = f"lipid_app/tool/results/{pk}.txt"
     with open(annotations_path, "r") as results_file:
         results_data = results_file.readlines()
 
@@ -98,17 +98,55 @@ def getAnnotations(request, pk):
         values = values.replace("'", '"')
         results_dict[key] = json.loads(values)
 
-    annotations_dict = {"annotated": {}, "suggested": {}}
+    annotations_dict = {"annotated": {}, "suggested_annotation": {}}
 
     for key, value in results_dict.items():
         if len(value[0]) <= 1 and len(value[1]) <= 1:
             annotations_dict["annotated"][key] = value
         else:
-            annotations_dict["suggested"][key] = value
+            annotations_dict["suggested_annotation"][key] = value
 
     if annotations_dict["annotated"]:
         annotations_dict["annotated"] = query.get_lipid_gema_ID(
             annotations_dict["annotated"]
         )
+    tool.create_annotated_file(
+        model_id=pk, annotated_dict=annotations_dict["annotated"]
+    )
+    tool.create_suggested_annotations_file(
+        model_id=pk, annotated_dict=annotations_dict["suggested_annotation"]
+    )
+
+    tool.set_lipid_metabolite_annotation(model, annotations_dict["annotated"], pk)
 
     return Response(annotations_dict)
+
+
+@api_view(["GET"])
+def getSuggestedAnnotation(request, pk, sk):
+    tool = Tool()
+    annotations_path = f"lipid_app/tool/results/{pk}_suggested_annotations.conf"
+
+    lipid_annotations_list = tool.get_lipid_suggested_annotations(pk, sk)
+    values = ast.literal_eval(lipid_annotations_list)
+
+    return Response(values)
+
+
+@api_view(["POST"])
+def set_model_annotations(request):
+    lipid_key = request.data.get("lipidKey")
+    model_id = request.data.get("model_id")
+    lipid = request.data.get("lipid")
+    tool = Tool()
+    annotations = {}
+
+    if "swiss_lipids_id" in lipid:
+        annotations["swiss_lipids_id"] = lipid["swiss_lipids_id"]
+
+    if "lipidmaps_id" in lipid:
+        annotations["lipid_maps_id"] = lipid["lipidmaps_id"]
+
+    tool.set_sugested_lipid_metabolite_annotation(annotations, model_id, lipid_key)
+
+    return JsonResponse({"message": "Successfully Annotated"})

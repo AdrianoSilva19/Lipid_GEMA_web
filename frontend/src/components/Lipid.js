@@ -10,7 +10,7 @@ function Lipid({lipid}) {
       }, [lipid]);
 
       return (
-        <Card className="my-3 p-3 rounded" border="Light" style={{ width: '20rem', borderWidth: '1px', height:'20rem' }}>
+        <Card className="my-3 p-3 rounded bg-light"  style={{ width: '20rem', borderWidth: '1px', height:'20rem' }}>
           <Link to={`/lipid/${lipid.boimmg_id}`} style={{ textDecoration: 'none' }}>
             <Card.Body className="d-flex flex-column align-items-center">
               <Card.Title as="div" className="text-center mb-2">

@@ -4,25 +4,33 @@ import axios from 'axios';
 import { Row, Container } from 'react-bootstrap';
 import ReactLoading from 'react-loading';
 import AnnotatedTable from '../components/AnnotatedCard'; 
+import SugestedAnnotationCard from '../components/SugestedAnnotationCard'; 
+import { useLipidData } from'../components/LipidDataContext'
+
 
 function ModelScreen() {
   const { model_id } = useParams();
-  const [lipid, setLipid] = useState(null);
-  const [isLoading, setIsLoading] = useState(true); // Add loading state
+  const { lipidData, setLipidData } = useLipidData(); // Get context data
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchLipidData() {
       try {
-        const response = await axios.get(`/api/model/${model_id}`);
-        setLipid(response.data);
-        setIsLoading(false); // Set loading to false when data is fetched
+        if (lipidData[model_id]) {
+          // If data is already fetched and stored in context, use it
+          setIsLoading(false);
+        } else {
+          const response = await axios.get(`/api/model/${model_id}`);
+          setLipidData(prevData => ({ ...prevData, [model_id]: response.data }));
+          setIsLoading(false);
+        }
       } catch (error) {
         console.error('Error fetching lipid data:', error);
       }
     }
 
     fetchLipidData();
-  }, [model_id]);
+  }, [model_id, lipidData, setLipidData]);
 
   return (
     <div>
@@ -42,18 +50,14 @@ function ModelScreen() {
         </div>
       ) : (
         <div>
-          {lipid && (
+          {lipidData[model_id] && (
             <div>
               <h3>Annotated</h3>
-              <AnnotatedTable lipid={lipid} />
+              <AnnotatedTable lipid={lipidData[model_id]} />
               <h3>Suggested</h3>
               <h6>Please select the right conformation on the <b>Suggested</b> annotations to annotate your <b>{model_id}</b> GSM model!</h6>
               <ul>
-                {Object.keys(lipid.suggested).map((key) => (
-                  <li key={key}>
-                    {key}: {lipid.suggested[key]}
-                  </li>
-                ))}
+              <SugestedAnnotationCard suggested_list={lipidData[model_id]} model_id={model_id} />
               </ul>
             </div>
           )}
