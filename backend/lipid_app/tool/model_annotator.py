@@ -29,7 +29,7 @@ class LipidNameAnnotator:
         :return: session linkage to remote database
         :rtype:
         """
-        conf = read_conf_file(os.path.dirname(__file__) + "/config/config.conf")
+        conf = read_conf_file(os.path.dirname(__file__) + "\config\config.conf")
         uri = conf["uri"]
         user = conf["user"]
         password = conf["password"]

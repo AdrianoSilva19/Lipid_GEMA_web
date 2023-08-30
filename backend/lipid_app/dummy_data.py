@@ -30,6 +30,7 @@ generics = [
         "boimmg_id": 240,
         "generic": "True",
         "chebi_id": "26739",
+        "smiles": "*/C=C/C[C@H](O)[C@@H](CO*)NC(=O)*",
     },
     {
         "swiss_lipids_id": "SLM:000390054",

@@ -83,18 +83,21 @@ function SugestedScreen() {
       </Container>
       <Container>
         <Row className="justify-content-center">
-          {lipids_list ? (
+        {
+          lipids_list ? (
             lipids_list.map((lipidSublist, sublistIndex) => (
               lipidSublist.map((lipid) => (
-                <Col key={lipid.boimmg_id} sm={12} md={6} lg={4} xl={4}>
-                <Lipid_submit key={lipid.boimmg_id} lipid={lipid} lipidKey={lipidKey} model_id={model_id} />
-                </Col>
+                lipid.boimmg_id ? (  // Check if lipid has a boimmg_id before rendering
+                  <Col key={lipid.boimmg_id} sm={12} md={6} lg={4} xl={4}>
+                    <Lipid_submit key={lipid.boimmg_id} lipid={lipid} lipidKey={lipidKey} model_id={model_id} />
+                  </Col>
+                ) : null
               ))
             ))
-            
           ) : (
             <div>Creating Images...</div>
-          )}
+          )
+        }
         </Row>
       </Container>
     </div>

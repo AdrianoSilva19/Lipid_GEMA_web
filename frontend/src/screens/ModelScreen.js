@@ -14,6 +14,7 @@ function ModelScreen() {
   const { lipidData, setLipidData } = useLipidData(); // Get context data
   const [isLoading, setIsLoading] = useState(true);
   const [isDownloaded, setIsDownloaded] = useState(false);
+  const [isAnnotationsDownloaded, setIsAnnotationsDownloaded] = useState(false);
 
   useEffect(() => {
     async function fetchLipidData() {
@@ -55,6 +56,24 @@ function ModelScreen() {
       console.error('Error downloading model:', error);
     }
   };
+  const handleDownloadAnnotationsClick = async () => {
+    try {
+      const response = await axios.get(`/api/download/model/annotations/${model_id}`, {
+        responseType: 'blob', 
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `${model_id}_annotations.xlsx`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setIsAnnotationsDownloaded(true); 
+    } catch (error) {
+      console.error('Error downloading annotations:', error);
+    }
+  };
 
   return (
     <div>
@@ -77,13 +96,13 @@ function ModelScreen() {
           {lipidData[model_id] && (
             <div style={{ borderBottom: '1.3px solid #ccc'  }}> 
               <Container>
-                  <Row style={{ fontSize: '40px', textAlign: 'center',marginBottom: '20px',marginTop: "20px",}}>
+                  <Row style={{ fontSize: '40px', textAlign: 'center',marginBottom: '15px',marginTop: "15px",}}>
                     <strong>Annotated</strong>
                   </Row>
               </Container>
               <AnnotatedTable lipid={lipidData[model_id]} />
               <Container>
-                  <Row style={{ fontSize: '40px', textAlign: 'center',marginBottom: '20px',marginTop: "20px"}}>
+                  <Row style={{ fontSize: '40px', textAlign: 'center',marginBottom: '15px',marginTop: "15px"}}>
                     <strong>Suggested</strong>
                   </Row>
               </Container>
@@ -93,11 +112,25 @@ function ModelScreen() {
               </ul>
             </div >
           )}
-          {isDownloaded && ( // Display the message and link after download
-            <div style={{ textAlign: 'center', marginTop: '25px', marginBottom: '20px' }}>
+          {isDownloaded && (
+            <div style={{ textAlign: 'center', marginTop: '25px', marginBottom: '20px', color: 'green' }}>
               <p>Your annotated model has been downloaded.
                 Check the downloads folder.
               </p>
+              <div style={{ textAlign: 'center', marginTop: '25px', marginBottom: '20px' }}>
+              {isAnnotationsDownloaded && (
+                <div style={{ textAlign: 'center', marginTop: '10px', color: 'green' }}>
+                  Download xlsx annotations successfully!
+                </div>
+              )}
+              {!isAnnotationsDownloaded && (
+                <div style={{ textAlign: 'center', marginTop: '25px', marginBottom: '20px' }}>
+                  <button onClick={handleDownloadAnnotationsClick} className="btn btn-primary">
+                    Download Annotations
+                  </button>
+                </div>
+              )}
+              </div>
               <Link to="/tool" className="btn btn-primary">
                 Go to Tool Page
               </Link>

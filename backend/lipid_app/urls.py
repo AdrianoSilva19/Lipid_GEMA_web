@@ -17,4 +17,9 @@ urlpatterns = [
         name="set_model_annotations",
     ),
     path("download/model/<pk>", views.getDownloadModel, name="Download"),
+    path(
+        "download/model/annotations/<pk>",
+        views.getDownloadAnnotations,
+        name="Download_Annotations",
+    ),
 ]

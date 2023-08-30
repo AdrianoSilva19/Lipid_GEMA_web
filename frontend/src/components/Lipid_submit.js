@@ -4,8 +4,18 @@ import { SmiDrawer } from 'smiles-drawer';
 import Button from 'react-bootstrap/Button';
 import axios from 'axios';
 import { useNavigate,Link  } from 'react-router-dom';
+import { useChecked } from './CheckedContext';
 
 function Lipid_submit({ lipid, lipidKey, model_id }) {
+  const { dispatch } = useChecked();
+  const [isSettingAnnotation, setIsSettingAnnotation] = useState(false);
+  const [annotationCompleted, setAnnotationCompleted] = useState(false);
+
+
+  const handleSwitchChange = () => {
+    dispatch({ type: 'TOGGLE_CHECKED', lipidKey });
+  };
+
   const navigate = useNavigate();
   useEffect(() => {
     SmiDrawer.apply(); // Call SmilesDrawer.apply() after rendering the component
@@ -13,6 +23,7 @@ function Lipid_submit({ lipid, lipidKey, model_id }) {
 
   const handleAnnotateClick = async () => {
     try {
+      setIsSettingAnnotation(true);
       const response = await axios.post('/api/set_model_annotations/', {
         lipidKey: lipidKey,
         lipid: lipid,
@@ -21,8 +32,12 @@ function Lipid_submit({ lipid, lipidKey, model_id }) {
       console.log('Annotations set:', response.data.message);
       // After successful annotation, navigate back
       navigate(-1);
+      handleSwitchChange();
     } catch (error) {
       console.error('Error setting annotations:', error);
+    }finally {
+      setIsSettingAnnotation(false);
+      setAnnotationCompleted(true)
     }
   };
 
@@ -40,9 +55,12 @@ function Lipid_submit({ lipid, lipidKey, model_id }) {
           alt="Lipid Image"
           className="align-self-center"
         />
-        <Button type="button" onClick={handleAnnotateClick}>
-          Annotate
-        </Button>
+        {!annotationCompleted && (
+          <Button type="button" onClick={handleAnnotateClick} disabled={isSettingAnnotation}>
+            Annotate
+          </Button>
+        )}
+        {isSettingAnnotation && <div className="mt-3">Annotating...</div>}
       </Card.Body>
     </Card>
   );

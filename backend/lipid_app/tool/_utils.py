@@ -89,9 +89,13 @@ def transform_boimmg_id_in_annotation_id(dictionary_results: Dict) -> Dict:
                 node_lipid_maps_id = node.get("c.lipidmaps_id")
                 if node_lipid_maps_id != None:
                     lipid_maps_ids.append(node_lipid_maps_id)
+                else:
+                    lipid_maps_ids.append("NaN")
 
                 node_swiss_lipids_id = node.get("ids")
                 if node_swiss_lipids_id != None:
                     swiss_lipids_ids.append(node_swiss_lipids_id)
+                else:
+                    swiss_lipids_ids.append("NaN")
         annotation_dict[metabolite_ids] = [lipid_maps_ids, swiss_lipids_ids]
     return annotation_dict

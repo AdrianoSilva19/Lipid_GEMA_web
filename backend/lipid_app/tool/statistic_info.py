@@ -60,7 +60,6 @@ class Tool:
     def set_lipid_metabolite_annotation(self, model, annotation_dict, model_id):
         path = f"lipid_app/tool/results/{model_id}_annotated.xml"
         session = self.login()
-        print(annotation_dict)
         model_final = self.set_metabolite_annotation_in_model(
             session, annotation_dict, model
         )
@@ -139,3 +138,7 @@ class Tool:
                     metabolite.annotation["slm"] = annotations["swiss_lipids_id"]
 
         return final_model
+
+    def get_annotated_dict(self, path_annotated_conf):
+        conf_content = read_conf_file(path_annotated_conf)
+        return conf_content

@@ -65,7 +65,9 @@ function SuggestedLipid({ lipidKey, model_id }) {
   const switchState = checkedState[lipidKey] || false;
 
   const handleSwitchChange = () => {
-    dispatch({ type: 'TOGGLE_CHECKED', lipidKey });
+    if (!switchState) { // Only allow toggling if the switch is not checked
+      dispatch({ type: 'TOGGLE_CHECKED', lipidKey });
+    }
   };
 
   return (
@@ -87,6 +89,7 @@ function SuggestedLipid({ lipidKey, model_id }) {
             id={`flexSwitchCheck-${lipidKey}`}
             checked={switchState}
             onChange={handleSwitchChange}
+            disabled={switchState} 
           />
           <label className="form-check-label" htmlFor={`flexSwitchCheck-${lipidKey}`}>
             Checked

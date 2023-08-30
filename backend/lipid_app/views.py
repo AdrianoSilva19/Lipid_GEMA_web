@@ -13,6 +13,7 @@ import mimetypes
 import json
 import ast
 import os
+import pandas as pd
 
 # Create your views here.
 
@@ -143,15 +144,37 @@ def set_model_annotations(request):
     model_id = request.data.get("model_id")
     lipid = request.data.get("lipid")
     tool = Tool()
+    annotations_list = []
+    annotations_swisslipids_list = []
+    annotations_lipidmaps_list = []
     annotations = {}
 
     if "swiss_lipids_id" in lipid:
         annotations["swiss_lipids_id"] = lipid["swiss_lipids_id"]
+        annotations_swisslipids_list.append(lipid["swiss_lipids_id"])
 
     if "lipidmaps_id" in lipid:
         annotations["lipid_maps_id"] = lipid["lipidmaps_id"]
+        annotations_lipidmaps_list.append(lipid["lipidmaps_id"])
 
+    annotations_list.append(annotations_lipidmaps_list)
+    annotations_list.append(annotations_swisslipids_list)
+    annotations_list.append(True)
     tool.set_sugested_lipid_metabolite_annotation(annotations, model_id, lipid_key)
+    path_txt = f"lipid_app/tool/results/{model_id}_suggested_annotations.conf"
+
+    # Read the existing annotations from the file
+    with open(path_txt, "r") as conf_file:
+        existing_annotations = conf_file.readlines()
+
+    # Update the specific annotation and write the entire updated content back to the file
+    with open(path_txt, "w") as conf_file:
+        for line in existing_annotations:
+            key, value = line.strip().split("=")
+            if key == lipid_key:
+                conf_file.write(f"{key}={str(annotations_list)}\n")
+            else:
+                conf_file.write(line)
 
     return JsonResponse({"message": "Successfully Annotated"})
 
@@ -176,9 +199,118 @@ def deleteFiles(pk):
     file_paths = [
         f"lipid_app/tool/results/{pk}_annotated.xml",
         f"lipid_app/tool/results/{pk}.txt",
-        f"lipid_app/tool/results/{pk}_suggested_annotations.conf",
-        f"lipid_app/tool/results/{pk}_annotated.conf",
         f"lipid_app/tool/models/{pk}.xml",
+    ]
+
+    for file_path in file_paths:
+        try:
+            os.remove(file_path)
+            print(f"File {file_path} deleted successfully.")
+        except OSError as e:
+            print(f"Error deleting {file_path}: {e}")
+
+
+@api_view(["GET"])
+def getDownloadAnnotations(request, pk):
+    createXlsFile(pk)
+    model_path = f"lipid_app/tool/results/{pk}.xlsx"
+
+    fl_path = f"lipid_app/tool/results/{pk}.xlsx"
+    filename = f"{pk}.xlsx"
+
+    with open(fl_path, "rb") as fl:
+        mime_type, _ = mimetypes.guess_type(fl_path)
+        response = HttpResponse(fl.read(), content_type=mime_type)
+        response["Content-Disposition"] = "attachment; filename=%s" % filename
+    deleteXLFiles(pk)
+    return response
+
+
+def createXlsFile(pk):
+    tool = Tool()
+    path_suggested_conf = f"lipid_app/tool/results/{pk}_suggested_annotations.conf"
+    path_annotated_conf = f"lipid_app/tool/results/{pk}_annotated.conf"
+
+    ## transform conf files into dictionaries to be easely handle ##
+
+    annotated_dict = tool.get_annotated_dict(path_annotated_conf)
+    parsed_annotated_dict = {}
+    for key, value in annotated_dict.items():
+        parsed_value = ast.literal_eval(value)
+        parsed_value.pop()
+        parsed_annotated_dict[key] = parsed_value
+
+    suggested_dict = tool.get_annotated_dict(path_suggested_conf)
+    parsed_suggested_dict = {}
+    for key, value in suggested_dict.items():
+        parsed_value = ast.literal_eval(value)
+        parsed_suggested_dict[key] = parsed_value
+
+    # From the suggested Lipid annotations select those who were annotated
+    # from a given user and those who were not annotated
+
+    suggested_annotated = {}
+    suggested = {}
+
+    for key, value in parsed_suggested_dict.items():
+        if isinstance(value, list) and True in value:
+            value.pop()
+            suggested_annotated[key] = value
+        else:
+            suggested[key] = value
+
+    merged_annotated_dicts = parsed_annotated_dict.copy()
+    merged_annotated_dicts.update(suggested_annotated)
+    annotations_data = {
+        "LM_annotations": [
+            item[0][0] if len(item[0]) > 0 else "NaN"
+            for item in merged_annotated_dicts.values()
+        ],
+        "SL_annotations": [
+            item[1][0] if len(item[1]) > 0 else "NaN"
+            for item in merged_annotated_dicts.values()
+        ],
+    }
+    class_annotated = pd.DataFrame(
+        annotations_data, index=merged_annotated_dicts.keys()
+    )
+    class_annotated.index.name = "Annotated Entities"
+
+    suggested_annotations_data = {
+        "LM_annotations": [
+            item[0] if len(item[0]) > 0 else "NaN" for item in suggested.values()
+        ],
+        "SL_annotations": [
+            item[1] if len(item[1]) > 0 else "NaN" for item in suggested.values()
+        ],
+    }
+    class_suggested = pd.DataFrame(suggested_annotations_data, index=suggested.keys())
+    class_suggested.index.name = "Suggested Entities"
+
+    rows = []
+    for index, row in class_suggested.iterrows():
+        for lm, sl in zip(row["LM_annotations"], row["SL_annotations"]):
+            rows.append([index, lm, sl])
+
+    new_columns = ["Suggested Entities", "LM_annotations", "SL_annotations"]
+    new_class_suggested = pd.DataFrame(rows, columns=new_columns)
+
+    path = f"lipid_app/tool/results/{pk}.xlsx"
+
+    with pd.ExcelWriter(path) as writer:
+        class_annotated.to_excel(
+            writer, sheet_name=str(pk), index=True, startrow=0, startcol=0
+        )
+        new_class_suggested.to_excel(
+            writer, sheet_name=str(pk), index=False, startrow=0, startcol=5
+        )
+
+
+def deleteXLFiles(pk):
+    file_paths = [
+        f"lipid_app/tool/results/{pk}_annotated.conf",
+        f"lipid_app/tool/results/{pk}_suggested_annotations.conf",
+        f"lipid_app/tool/results/{pk}.xlsx",
     ]
 
     for file_path in file_paths:
