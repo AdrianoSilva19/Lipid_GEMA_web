@@ -26,6 +26,23 @@ function SuggestedLipidsCards({ suggested_list, model_id }) {
     setCurrentPage(pageNumber);
   };
 
+  const maxVisiblePageButtons = 5; // Maximum number of visible page buttons
+
+  // Calculate the range of page numbers to display with ellipsis
+  const leftPageBound = Math.max(1, currentPage - Math.floor(maxVisiblePageButtons / 2));
+  const rightPageBound = Math.min(
+    Math.ceil(suggestedKeys.length / cardsPerPage),
+    leftPageBound + maxVisiblePageButtons - 1
+  );
+
+  // Create an array of page numbers within the range
+  const visiblePageNumbers = Array.from(
+    { length: rightPageBound - leftPageBound + 1 },
+    (_, index) => leftPageBound + index
+  );
+
+
+
   return (
     <>
       <Row className="justify-content-center">
@@ -40,17 +57,35 @@ function SuggestedLipidsCards({ suggested_list, model_id }) {
           </Col>
         ))}
       </Row>
-      <Pagination  style={{ textAlign: 'center' }}>
+      <Pagination style={{ textAlign: 'center' }}>
         <Pagination.Prev onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1} />
-        {Array.from({ length: Math.ceil(suggestedKeys.length / cardsPerPage) }).map((_, index) => (
+        {leftPageBound > 1 && (
+          <>
+            <Pagination.Item onClick={() => paginate(1)}>1</Pagination.Item>
+            {leftPageBound > 2 && <Pagination.Ellipsis />}
+          </>
+        )}
+        {visiblePageNumbers.map((pageNumber) => (
           <Pagination.Item
-            key={index}
-            active={index + 1 === currentPage}
-            onClick={() => paginate(index + 1)}
+            key={pageNumber}
+            active={pageNumber === currentPage}
+            onClick={() => paginate(pageNumber)}
           >
-            {index + 1}
+            {pageNumber}
           </Pagination.Item>
         ))}
+        {rightPageBound < Math.ceil(suggestedKeys.length / cardsPerPage) && (
+          <>
+            {rightPageBound < Math.ceil(suggestedKeys.length / cardsPerPage) - 1 && (
+              <Pagination.Ellipsis />
+            )}
+            <Pagination.Item
+              onClick={() => paginate(Math.ceil(suggestedKeys.length / cardsPerPage))}
+            >
+              {Math.ceil(suggestedKeys.length / cardsPerPage)}
+            </Pagination.Item>
+          </>
+        )}
         <Pagination.Next
           onClick={() => paginate(currentPage + 1)}
           disabled={currentPage === Math.ceil(suggestedKeys.length / cardsPerPage)}

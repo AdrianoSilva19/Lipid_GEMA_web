@@ -94,7 +94,7 @@ class ToolScreen extends Component {
           </Row>
         )}
         <Row>
-          <Col style={{ fontSize: '20px', textAlign: 'center', width: '100%' }}>
+          <Col style={{ fontSize: '20px', textAlign: 'center', width: '100%', marginTop:"20px" }}>
             {resultsData && <Link to={`/model/${selectedFileName.replace('.xml', '')}`} style={{ textDecoration: 'none', marginTop: "20px" }} className="btn btn-primary mb-0">
               See Annotations
             </Link>}

@@ -202,8 +202,10 @@ class Querys:
 
     def get_lipid_gema_ID(self, annotations_list):
         for key, value in annotations_list.items():
-            lm_annotation = value[0]
-            sl_annotation = value[1]
+            if value[0] != ["NaN"]:
+                lm_annotation = value[0]
+            if value[1] != ["NaN"]:
+                sl_annotation = value[1]
             new_values = []  # Create a new list for the added values
 
             if lm_annotation != []:
