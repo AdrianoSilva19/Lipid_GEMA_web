@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.shortcuts import render
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -8,7 +7,8 @@ from .db.Querys import Querys
 from .tool.statistic_info import Tool
 from cobra.io import read_sbml_model
 from django.http import HttpResponse
-from rest_framework import status
+from django.http import JsonResponse
+
 import mimetypes
 import json
 import ast
@@ -77,14 +77,19 @@ def upload_gsm_model(request):
     if request.method == "POST" and request.FILES.get("gsmModel"):
         uploaded_file = request.FILES["gsmModel"]
 
-        file_path = f"lipid_app/tool/models/{uploaded_file.name}"
-        with open(file_path, "wb+") as destination:
-            for chunk in uploaded_file.chunks():
-                destination.write(chunk)
+        if uploaded_file.size <= 100 * 1024 * 1024:  # Check file size limit (100 MB)
+            file_path = f"lipid_app/tool/models/{uploaded_file.name}"
+            with open(file_path, "wb+") as destination:
+                for chunk in uploaded_file.chunks():
+                    destination.write(chunk)
 
-        tool.annotate_model(uploaded_file.name)
+            tool.annotate_model(uploaded_file.name)
 
-        return JsonResponse({"message": "Sucessfully Annotated"})
+            return JsonResponse({"message": "Successfully Annotated"})
+        else:
+            return JsonResponse(
+                {"error": "File size exceeds the limit of 100 MB."}, status=400
+            )
 
 
 @api_view(["GET"])

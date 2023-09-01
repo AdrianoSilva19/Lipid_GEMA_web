@@ -25,23 +25,27 @@ class ToolScreen extends Component {
 
   handleSubmit = async (event) => {
     event.preventDefault();
-
+  
     const fileInput = document.getElementById('image');
     const file = fileInput.files[0];
-
+  
     if (file) {
-      this.setState({ isLoading: true }); // Set loading state
-
-      const formData = new FormData();
-      formData.append('gsmModel', file);
-
-      try {
-        const response = await axios.post('/api/upload/', formData);
-        const resultsData = response.data;
-        this.setState({ resultsData, isLoading: false }); // Clear loading state
-      } catch (error) {
-        console.error('Error uploading file:', error);
-        this.setState({ isLoading: false }); // Clear loading state on error
+      if (file.size <= 100 * 1024 * 1024) { // Check file size limit (100 MB)
+        this.setState({ isLoading: true });
+  
+        const formData = new FormData();
+        formData.append('gsmModel', file);
+  
+        try {
+          const response = await axios.post('/api/upload/', formData);
+          const resultsData = response.data;
+          this.setState({ resultsData, isLoading: false });
+        } catch (error) {
+          console.error('Error uploading file:', error);
+          this.setState({ isLoading: false });
+        }
+      } else {
+        alert('File size exceeds the limit of 100 MB.');
       }
     }
   };
