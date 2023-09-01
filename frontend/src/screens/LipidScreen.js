@@ -1,43 +1,45 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Row, Col, ListGroup, Card} from 'react-bootstrap';
-import axios from 'axios';
 import { SmiDrawer } from 'smiles-drawer';
 import TabList from '../components/TabList'
 import Loading from '../components/Loading';
+import Message from '../components/Message';
+import { useDispatch,useSelector } from 'react-redux'
+import { dictLipid } from '../actions/lipidActions'
 
 
 function LipidScreen() {
   const { id } = useParams();
-  const [lipid, setLipid] = useState(null);
+  const dispatch = useDispatch()
+  const lipidDict = useSelector((state) => state.lipidDict);
+
+  const { error, loading, lipid } = lipidDict;
+
+
 
   useEffect(() => {
-    async function fetchLipidData() {
-      try {
-        const response = await axios.get(`/api/lipid/L_ID/${id}`);
-        setLipid(response.data);
-      } catch (error) {
-        console.error('Error fetching lipid data:', error);
-      }
-    }
+    console.log('LipidScreen useEffect triggered');
+    dispatch(dictLipid(id))
+  },[dispatch, id])
 
-   
-    setLipid(null);
-    fetchLipidData();
-  }, [id]); 
 
   useEffect(() => {
     SmiDrawer.apply(); 
   }, [lipid]);
 
-  if (!lipid) {
-    return <Loading />; 
-  }
+  console.log('loading:', loading);
 
 
 
   return (
+    
     <div className="LipidScreen">
+       
+      {loading ? <Loading />
+        : error ? <Message variant="danger" >{error}</Message>
+        :
+        <div>
       <Row style={{ fontSize: '40px', textAlign: 'center', marginTop: '20px', marginBottom: '25px' }}>
         <h3>
           <strong>{lipid.name}</strong>
@@ -63,6 +65,8 @@ function LipidScreen() {
           Go Back
         </Link>
       </Row>
+      </div>
+      }
     </div>
   );
 }

@@ -4,8 +4,7 @@ import { SmiDrawer } from 'smiles-drawer';
 import { Link } from 'react-router-dom';
 
 
-function LipidsComponentsList(props) {
-    const { component } = props;
+function LipidsComponentsList({ component }) {
     useEffect(() => {
         SmiDrawer.apply(); // Call SmilesDrawer.apply() after rendering the component
       }, [component]);

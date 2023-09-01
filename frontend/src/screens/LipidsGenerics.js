@@ -2,19 +2,17 @@ import React, {useEffect,useState} from 'react'
 import Container from 'react-bootstrap/Container';
 import { Row, Col, ListGroup } from 'react-bootstrap'
 import Lipid from '../components/Lipid'
-import axios from 'axios'
+import { useDispatch,useSelector } from 'react-redux'
+import { listGenerics } from '../actions/genericsActions'
 
 function LipidsGenerics() {
-  const [lipids,setProducts] = useState([])
+  const dispatch = useDispatch()
+  const genericsList = useSelector(state=>state.genericsList)
 
+  const {error,loading,generics} = genericsList
   useEffect(() => {
-    async function fetchProducts(){
-      const {data} = await axios.get('/api/generics/')
-      setProducts(data)
-    }  
-
-    fetchProducts()
-  },[])
+    dispatch(listGenerics())
+  },[dispatch])
 
   return (
     <div>
@@ -29,7 +27,7 @@ function LipidsGenerics() {
   </Container>
   <Container>
     <Row className="justify-content-center">
-      {lipids.map((lipid) => (
+      {generics.map((lipid) => (
         <Col key={lipid.boimmg_id} sm={12} md={6} lg={4} xl={4}>
           <Lipid lipid={lipid} />
         </Col>

@@ -1,0 +1,14 @@
+node_modules
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+__pycache__/*
+*.pyc
+
+
+*.xml
+*.txt
+
+node_modeules/*

@@ -101,7 +101,7 @@ function TabList(props) {
                   </Col>
       </Row>
       </Tab>
-      <Tab eventKey="longer-tab" title="Parents">
+      <Tab eventKey="parents" title="Parents">
         <Row className="justify-content-center">
         {lipid.parents?.map((component, index) => (
           <Col key={index} sm={12} md={6} lg={4} xl={4}>
