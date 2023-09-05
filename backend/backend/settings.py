@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "lipid_app.apps.LipidAppConfig",
     "rest_framework",
     "corsheaders",
+    "storages",
 ]
 
 MIDDLEWARE = [

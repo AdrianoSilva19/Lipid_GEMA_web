@@ -8,6 +8,10 @@ from .tool.statistic_info import Tool
 from cobra.io import read_sbml_model
 from django.http import HttpResponse
 from django.http import JsonResponse
+import boto3
+from io import BytesIO
+from django.shortcuts import redirect
+from wsgiref.util import FileWrapper
 
 import mimetypes
 import json
@@ -16,6 +20,12 @@ import os
 import pandas as pd
 
 # Create your views here.
+
+s3 = boto3.client(
+    "s3",
+    aws_access_key_id="AKIAWKPDRVDI6IEX6X6M",
+    aws_secret_access_key="TXPMes9zKyo+az+T4H8Uw/3RWr4XYmlX8NL8XcX8",
+)
 
 
 @api_view(["GET"])
@@ -217,18 +227,37 @@ def deleteFiles(pk):
 
 @api_view(["GET"])
 def getDownloadAnnotations(request, pk):
-    createXlsFile(pk)
-    model_path = f"lipid_app/tool/results/{pk}.xlsx"
+    s3_url = createXlsFile(pk)
+    file_name = s3_url.split("/")[-1]
 
-    fl_path = f"lipid_app/tool/results/{pk}.xlsx"
-    filename = f"{pk}.xlsx"
+    # Create an HTTP response with the file as an attachment
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
 
-    with open(fl_path, "rb") as fl:
-        mime_type, _ = mimetypes.guess_type(fl_path)
-        response = HttpResponse(fl.read(), content_type=mime_type)
-        response["Content-Disposition"] = "attachment; filename=%s" % filename
+    # Use open_excel_from_s3 to get the BytesIO buffer
+    file = open_excel_from_s3(s3_url, pk)
+
+    # Write the content of the BytesIO buffer directly to the response
+    response.write(file.getvalue())
+
+    # Delete the file from S3 after it has been downloaded
     deleteXLFiles(pk)
+    delete_file_from_s3(pk)
+
     return response
+
+
+def open_excel_from_s3(s3_url, pk):
+    # Download the file from S3
+    excel_buffer = BytesIO()
+    s3.download_fileobj("lipidgema", f"results/{pk}.xlsx", excel_buffer)
+
+    # Set the buffer position to the beginning of the file
+    excel_buffer.seek(0)
+    print(excel_buffer)
+    return excel_buffer
 
 
 def createXlsFile(pk):
@@ -300,9 +329,8 @@ def createXlsFile(pk):
     new_columns = ["Suggested Entities", "LM_annotations", "SL_annotations"]
     new_class_suggested = pd.DataFrame(rows, columns=new_columns)
 
-    path = f"lipid_app/tool/results/{pk}.xlsx"
-
-    with pd.ExcelWriter(path) as writer:
+    excel_buffer = BytesIO()
+    with pd.ExcelWriter(excel_buffer, engine="xlsxwriter") as writer:
         class_annotated.to_excel(
             writer, sheet_name=str(pk), index=True, startrow=0, startcol=0
         )
@@ -310,12 +338,30 @@ def createXlsFile(pk):
             writer, sheet_name=str(pk), index=False, startrow=0, startcol=5
         )
 
+    # Upload the XLSX file to AWS S3
+    bucket_name = "lipidgema"
+    s3_object_key = f"results/{pk}.xlsx"
+
+    excel_buffer.seek(0)
+    s3.upload_fileobj(excel_buffer, bucket_name, s3_object_key)
+
+    # Return the S3 URL of the uploaded file
+    s3_url = f"https://{bucket_name}.s3.amazonaws.com/{s3_object_key}"
+    return s3_url
+
+
+def delete_file_from_s3(pk):
+    # Specify the S3 object key to be deleted
+    s3_object_key = f"results/{pk}.xlsx"
+
+    # Delete the object from the S3 bucket
+    s3.delete_object(Bucket="lipidgema", Key=s3_object_key)
+
 
 def deleteXLFiles(pk):
     file_paths = [
         f"lipid_app/tool/results/{pk}_annotated.conf",
         f"lipid_app/tool/results/{pk}_suggested_annotations.conf",
-        f"lipid_app/tool/results/{pk}.xlsx",
     ]
 
     for file_path in file_paths:
