@@ -10,8 +10,7 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 import boto3
 from io import BytesIO
-from django.shortcuts import redirect
-from wsgiref.util import FileWrapper
+from .aws import _utils
 
 import mimetypes
 import json
@@ -19,12 +18,12 @@ import ast
 import os
 import pandas as pd
 
-# Create your views here.
 
+conf = _utils.read_conf_file()
 s3 = boto3.client(
     "s3",
-    aws_access_key_id="AKIAWKPDRVDI6IEX6X6M",
-    aws_secret_access_key="TXPMes9zKyo+az+T4H8Uw/3RWr4XYmlX8NL8XcX8",
+    aws_access_key_id=conf["aws_access_key_id"],
+    aws_secret_access_key=conf["aws_secret_access_key"],
 )
 
 

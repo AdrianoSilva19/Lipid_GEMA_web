@@ -10,5 +10,6 @@ __pycache__/*
 
 *.xml
 *.txt
+*.conf
 
 node_modeules/*
