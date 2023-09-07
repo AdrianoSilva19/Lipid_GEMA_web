@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.request import Request
 from .dummy_data import generics
 from .db.Querys import Querys
 from .tool.statistic_info import Tool
@@ -11,7 +12,7 @@ from django.http import JsonResponse
 import boto3
 from io import BytesIO
 from .aws import _utils
-
+import logging
 import mimetypes
 import json
 import ast
@@ -28,18 +29,51 @@ s3 = boto3.client(
 
 
 @api_view(["GET"])
-def getRoutes(request):
+def getRoutes(request: Request) -> Response:
+    """
+    View to get all available routes.
+
+    This view returns a list of available routes for the API.
+
+    :param request: The HTTP request object.
+    :type request: Request
+
+    :return: A list of available API routes.
+    :rtype: Response
+    """
     routes = ["/api/generics/", "/api/generics/<id>/", "/api/lipid/<str:pk>"]
     return Response(routes)
 
 
 @api_view(["GET"])
-def getGenerics(request):
+def getGenerics(request: Request) -> Response:
+    """
+    View to get all original generics.
+    This view will return a dictionary withh all lipid generic entities
+
+    :param request: HTTP request object
+    :type request: Request
+    :return: A dictionary with all the original generic entities
+    :rtype: Response
+    """
     return Response(generics)
 
 
 @api_view(["GET"])
-def getGeneric(request, pk):
+def getGeneric(request: Request, pk: int) -> Response:
+    """
+    View to get a given lipid entity from its database id.
+    This view returns a dictionary with the Lipid entitie informations:
+
+    Dict Example ..
+
+    :param request: HTTP request object
+    :type request: Request
+    :param pk: Primary key, stores a given boimmg id
+    :type pk: int
+    :return: Objective Lipid Entity dictionary
+    :rtype: Response
+    """
     generic = None
     for i in generics:
         if i["boimmg_id"] == pk:
@@ -50,6 +84,19 @@ def getGeneric(request, pk):
 
 @api_view(["GET"])
 def getLipid_by_SwissLipidsID(request, pk):
+    """
+    View to get a given lipid entity from its swiss lipids id.
+    This view returns a dictionary with the Lipid entitie informations:
+
+    Dict Example ..
+
+    :param request: HTTP request object
+    :type request: Request
+    :param pk: Primary key, stores a given swiss lipids id
+    :type pk: str
+    :return: Objective Lipid Entity dictionary
+    :rtype: Response
+    """
     query = Querys()
     sl_id = query.get_node_from_swiss_lipids_id(pk)
 
@@ -57,7 +104,22 @@ def getLipid_by_SwissLipidsID(request, pk):
 
 
 @api_view(["GET"])
-def getLipid_by_Id(request, pk):
+def getLipid_by_Id(request: Request, pk: int) -> Response:
+    """
+    View to get a given lipid relationships from its database id.
+    This view returns a dictionary with the Lipid entitie relationships stored
+    as keys and the id of the relationship as values, this dictionary will contain parents, components
+    if it is a non generic entity, and childres, children_species if it is a generic entity:
+
+    Dict Example ..
+
+    :param request: HTTP request object
+    :type request: Request
+    :param pk: Id from Lipid_GEMA database
+    :type pk: int
+    :return: Relationship dictionary
+    :rtype: Response
+    """
     query = Querys()
     l_id = query.get_node_by_ont_id(pk)
     l_id = dict(l_id)
@@ -73,7 +135,20 @@ def getLipid_by_Id(request, pk):
 
 
 @api_view(["GET"])
-def getLipid_by_LipidMapsID(request, pk):
+def getLipid_by_LipidMapsID(request: Request, pk: str) -> Response:
+    """
+    View to get a given lipid entity from its lipid maps id.
+    This view returns a dictionary with the Lipid entitie informations:
+
+    Dict Example ..
+
+    :param request: HTTP request object
+    :type request: Request
+    :param pk: Primary key, stores a given lipid maps id
+    :type pk: str
+    :return: Objective Lipid Entity dictionary
+    :rtype: Response
+    """
     query = Querys()
     lm_id = query.get_node_from_lipid_maps_id(pk)
 
@@ -81,7 +156,20 @@ def getLipid_by_LipidMapsID(request, pk):
 
 
 @api_view(["POST"])
-def upload_gsm_model(request):
+def upload_gsm_model(request: Request) -> JsonResponse:
+    """
+    Upload a GSM model file and annotate it.
+
+    This view allows you to upload a GSM model file, and if the file size is within the
+    limit of 100 MB, it saves the file, and then calls a function to annotate the model.
+
+    :param request: The HTTP request object.
+    :type request: Request
+
+    :return: A JSON response indicating the result of the upload and annotation.
+    :rtype: JsonResponse
+    """
+
     tool = Tool()
     if request.method == "POST" and request.FILES.get("gsmModel"):
         uploaded_file = request.FILES["gsmModel"]
@@ -102,7 +190,20 @@ def upload_gsm_model(request):
 
 
 @api_view(["GET"])
-def getAnnotations(request, pk):
+def getAnnotations(request: Request, pk: str) -> Response:
+    """View that sets Annotations and separates automated and non automated annotations in a config file.
+    Then a dictionary with the suggested and the annotated annotations is returned.
+
+    Returned dict:
+    {sugested:{lipid_key:id},annotated:{lipid_key:id}}
+
+    :param request: The HTTP request object.
+    :type request: Request
+    :param pk: Model name
+    :type pk: str
+    :return: Dictionary with the suggested and the annotated annotations
+    :rtype: Response
+    """
     tool = Tool()
     query = Querys()
     path = f"lipid_app/tool/models/{pk}.xml"
@@ -142,9 +243,24 @@ def getAnnotations(request, pk):
 
 
 @api_view(["GET"])
-def getSuggestedAnnotation(request, pk, sk):
+def getSuggestedAnnotation(request: Request, pk: str, sk: str) -> Response:
+    """
+    View that given a model name and a lipid key performs the searching for the suggested annotations dictionary
+    in the model suggested annotations conf file and returns it as a dictionary.
+
+    returned dictionary:
+    {lipid_key:[[LM_annotation],[SL_annotation]]}
+
+    :param request: The HTTP request object.
+    :type request: Request
+    :param pk: Model file name
+    :type pk: str
+    :param sk: Given Lipid key from the model
+    :type sk: str
+    :return: Dictionary with all suggested annotations
+    :rtype: Response
+    """
     tool = Tool()
-    annotations_path = f"lipid_app/tool/results/{pk}_suggested_annotations.conf"
 
     lipid_annotations_list = tool.get_lipid_suggested_annotations(pk, sk)
     values = ast.literal_eval(lipid_annotations_list)
@@ -153,7 +269,20 @@ def getSuggestedAnnotation(request, pk, sk):
 
 
 @api_view(["POST"])
-def set_model_annotations(request):
+def set_model_annotations(request: Response) -> Request:
+    """
+    Set suggested annotations for a model and update them in the suggested configuration file to appear as annotated.
+
+    This view allows you to set annotations for a model and update the annotations
+    in hte configuration file. It expects a POST request with JSON data containing
+    lipid-related information.
+
+    :param request: The HTTP request object.
+    :type request: Request
+
+    :return: A JSON response indicating the result of the annotation update.
+    :rtype: JsonResponse
+    """
     lipid_key = request.data.get("lipidKey")
     model_id = request.data.get("model_id")
     lipid = request.data.get("lipid")
@@ -194,7 +323,21 @@ def set_model_annotations(request):
 
 
 @api_view(["GET"])
-def getDownloadModel(request, pk):
+def getDownloadModel(request: Request, pk: str) -> Response:
+    """
+    Download an annotated model.
+
+    This view allows you to download an annotated model by providing the model's name (pk).
+
+
+    :param request: The HTTP request object.
+    :type request: Request
+    :param pk: The model id
+    :type pk: str
+    :return: A response containing the downloadable model file.
+    :rtype: Response
+    """
+
     model_path = f"lipid_app/tool/results/{pk}_annotated.xml"
 
     # fill these variables with real values
@@ -209,7 +352,18 @@ def getDownloadModel(request, pk):
     return response
 
 
-def deleteFiles(pk):
+def deleteFiles(pk: str):
+    """
+    Delete specific files associated with a given model name.
+
+    This function deletes the following files associated with a model name (pk):
+    - Annotated XML file.
+    - Results Text file.
+    - XML model file.
+
+    :param pk: The model ID for which files should be deleted.
+    :type pk: str
+    """
     file_paths = [
         f"lipid_app/tool/results/{pk}_annotated.xml",
         f"lipid_app/tool/results/{pk}.txt",
@@ -219,13 +373,25 @@ def deleteFiles(pk):
     for file_path in file_paths:
         try:
             os.remove(file_path)
-            print(f"File {file_path} deleted successfully.")
+            logging.info(f"File {file_path} deleted successfully.")
         except OSError as e:
-            print(f"Error deleting {file_path}: {e}")
+            logging.info(f"Error deleting {file_path}: {e}")
 
 
 @api_view(["GET"])
-def getDownloadAnnotations(request, pk):
+def getDownloadAnnotations(request, pk: str):
+    """
+    Download annotations in Excel format.
+
+    This view allows you to download annotations in Excel format for a given model (pk).
+
+    :param request: The HTTP request object.
+    :type request: Request
+    :param pk: The model ID for which annotations should be downloaded.
+    :type pk: str
+    :return: A response containing the downloadable Excel file.
+    :rtype: Response
+    """
     s3_url = createXlsFile(pk)
     file_name = s3_url.split("/")[-1]
 
@@ -248,7 +414,15 @@ def getDownloadAnnotations(request, pk):
     return response
 
 
-def open_excel_from_s3(s3_url, pk):
+def open_excel_from_s3(pk: str) -> BytesIO:
+    """
+    Open an Excel file from AWS S3 and return it as a BytesIO buffer.
+
+    :param pk: The model ID.
+    :type pk: str
+    :return: A BytesIO buffer containing the Excel file.
+    :rtype: BytesIO
+    """
     # Download the file from S3
     excel_buffer = BytesIO()
     s3.download_fileobj("lipidgema", f"results/{pk}.xlsx", excel_buffer)
@@ -259,7 +433,15 @@ def open_excel_from_s3(s3_url, pk):
     return excel_buffer
 
 
-def createXlsFile(pk):
+def createXlsFile(pk: str) -> str:
+    """
+    Create an Excel file with annotations and upload it to AWS S3.
+
+    :param pk: The model ID.
+    :type pk: str
+    :return: The S3 URL of the uploaded Excel file.
+    :rtype: str
+    """
     tool = Tool()
     path_suggested_conf = f"lipid_app/tool/results/{pk}_suggested_annotations.conf"
     path_annotated_conf = f"lipid_app/tool/results/{pk}_annotated.conf"
@@ -349,7 +531,13 @@ def createXlsFile(pk):
     return s3_url
 
 
-def delete_file_from_s3(pk):
+def delete_file_from_s3(pk: str):
+    """
+    Delete an Excel file from AWS S3.
+
+    :param pk: The model ID.
+    :type pk: str
+    """
     # Specify the S3 object key to be deleted
     s3_object_key = f"results/{pk}.xlsx"
 
@@ -358,6 +546,17 @@ def delete_file_from_s3(pk):
 
 
 def deleteXLFiles(pk):
+    """
+    Delete specific files associated with a given model name.
+
+    This function deletes the following files associated with a model name (pk):
+    - Annotated conf file.
+    - Suggested conf file.
+
+
+    :param pk: The model ID for which files should be deleted.
+    :type pk: str
+    """
     file_paths = [
         f"lipid_app/tool/results/{pk}_annotated.conf",
         f"lipid_app/tool/results/{pk}_suggested_annotations.conf",
@@ -366,6 +565,6 @@ def deleteXLFiles(pk):
     for file_path in file_paths:
         try:
             os.remove(file_path)
-            print(f"File {file_path} deleted successfully.")
+            logging.info(f"File {file_path} deleted successfully.")
         except OSError as e:
-            print(f"Error deleting {file_path}: {e}")
+            logging.info(f"Error deleting {file_path}: {e}")
