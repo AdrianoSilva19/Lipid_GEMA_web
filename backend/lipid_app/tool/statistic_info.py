@@ -1,32 +1,60 @@
+import os
 from lipid_app.tool.model_annotator import LipidNameAnnotator
 import pandas as pd
 from cobra.io import read_sbml_model, write_sbml_model
 from lipid_app.tool._utils import transform_boimmg_id_in_annotation_id
-import os
 from lipid_app.db._utils import read_conf_file
-from lipid_app.tool._utils import set_metabolite_annotation_in_model
 from neo4j import GraphDatabase
+from cobra import Model
 
 
 class Tool:
-    def create_annotated_file(self, model_id, annotated_dict):
+    """Tool class that will perform the annotations and handle annotation files"""
+
+    def create_annotated_file(self, model_id: str, annotated_dict: dict):
+        """
+        Method to create a config file with the annotated lipid entities from a given <model_id> named model.
+
+        annotated_dict = {lipid_key:[[LM_annotation],[SL_annotation],lipid_GEMA_ID]}
+
+        :param model_id: Model name
+        :type model_id: str
+        :param annotated_dict: Dictionary with annotated lipid entities
+        :type annotated_dict: dict
+        """
         path_txt = f"lipid_app/tool/results/{model_id}_annotated.conf"
         conf = open(path_txt, "w")
         for k, v in annotated_dict.items():
             conf.write(k + "=" + str(v) + "\n")
 
-    def create_suggested_annotations_file(self, model_id, annotated_dict):
+    def create_suggested_annotations_file(self, model_id: str, annotated_dict: dict):
+        """
+        Method to create a config file with the suggested lipid entities from a given <model_id> named model.
+
+        suggested_dict = {lipid_key:[[LM_annotation],[SL_annotation]]}
+
+        :param model_id: Model name
+        :type model_id: str
+        :param annotated_dict: Dictionary with suggested lipid entities
+        :type annotated_dict: dict
+        """
+
         path_txt = f"lipid_app/tool/results/{model_id}_suggested_annotations.conf"
         conf = open(path_txt, "w")
         for k, v in annotated_dict.items():
             conf.write(k + "=" + str(v) + "\n")
 
-    def annotate_model(self, name):
-        """Function that gets all statisticall information from LipidNameAnnotator class relative to lipids class caugth and number of lipids annotated.
-        This data is stored in a spreadsheet specific for each model analised.
+    def annotate_model(self, name: str):
+        """
+        Method that implements the tool workflow to annotate the model. This model gathers important statistical information regarding the model annotaion.
+        -Lipid class presented in the Model
+        -Original annotation presented in the model
+        -Classes that have suggested annotations
+        -Suggested annotations to be setted
+        The suggested annotations are stored in a TXT file
 
-        :param path: Path to the model to be analised
-        :type path: _type_
+        :param name: Model name
+        :type name: str
         """
         path = f"lipid_app/tool/models/{name}"
         model = read_sbml_model(path)
@@ -50,10 +78,18 @@ class Tool:
         for k, v in sugested_annotations.items():
             output.writelines(f"{k} {v}\n")
 
-        return path_txt
+    def get_lipid_suggested_annotations(self, model_id: str, lipidKey: str) -> str:
+        """
+        Method that with a given model name and a given lipidKey gets the suggested annotations conf file and returns the annotations for the given lipidKey.
 
-    def get_lipid_suggested_annotations(self, path, lipidKey):
-        path = f"lipid_app/tool/results/{path}_suggested_annotations.conf"
+        :param model_id: model name
+        :type model_id: str
+        :param lipidKey: given lipidKey from the model
+        :type lipidKey: str
+        :return: stringuified list with the suggested annotaions
+        :rtype: str
+        """
+        path = f"lipid_app/tool/results/{model_id}_suggested_annotations.conf"
         conf = read_conf_file(path)
         return conf[lipidKey]
 
@@ -114,16 +150,18 @@ class Tool:
         )
         write_sbml_model(model_final, path)
 
-    def _set_sugested_lipid_metabolite_annotation(self, model, annotations, lipidKey):
+    def _set_sugested_lipid_metabolite_annotation(
+        self, model: Model, annotations: dict, lipidKey: str
+    ) -> Model:
         """Function to anotate lipid metabolites in a user chossen model
 
-        :param session: driver linkage to database
-        :type session: GraphDatabase.driver
-        :param dictionary_results: Python Dictionary with Lipid metabolites IDs from the BOIMMG the database
-        :type dictionary_results: Dict
-        :param model: GSM model to be annotated
+        :param model: model to perform the annotation
         :type model: Model
-        :return: Gsm model with defined Lipids annotated
+        :param annotations: annotations to a given lipidkey
+        :type annotations: dict
+        :param lipidKey: lipid in the model to be annotated
+        :type lipidKey: str
+        :return: Annotated model
         :rtype: Model
         """
         final_model = model.copy()  # Copy the model to avoid modifying the original
@@ -139,6 +177,14 @@ class Tool:
 
         return final_model
 
-    def get_annotated_dict(self, path_annotated_conf):
+    def get_annotated_dict(self, path_annotated_conf: str) -> dict:
+        """
+        Method to get the annotated conf file content
+
+        :param path_annotated_conf: path to the actuall annotated conf file
+        :type path_annotated_conf: str
+        :return: Dictionary with the contend of the configuration file
+        :rtype: dict
+        """
         conf_content = read_conf_file(path_annotated_conf)
         return conf_content
