@@ -127,7 +127,7 @@ function SuggestedLipid({ lipidKey, model_id }) {
             disabled={switchState} 
           />
           <label className="form-check-label" htmlFor={`flexSwitchCheck-${lipidKey}`}>
-            Checked
+            Annotated
           </label>
         </div>
       </Card.Body>

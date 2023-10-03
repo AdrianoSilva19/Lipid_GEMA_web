@@ -286,6 +286,7 @@ def set_model_annotations(request: Response) -> Request:
     lipid_key = request.data.get("lipidKey")
     model_id = request.data.get("model_id")
     lipid = request.data.get("lipid")
+    boimmg_id = request.data.get("boimmg_id")
     tool = Tool()
     annotations_list = []
     annotations_swisslipids_list = []
@@ -429,7 +430,6 @@ def open_excel_from_s3(pk: str) -> BytesIO:
 
     # Set the buffer position to the beginning of the file
     excel_buffer.seek(0)
-    print(excel_buffer)
     return excel_buffer
 
 

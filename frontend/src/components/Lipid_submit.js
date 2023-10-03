@@ -28,6 +28,7 @@ function Lipid_submit({ lipid, lipidKey, model_id }) {
         lipidKey: lipidKey,
         lipid: lipid,
         model_id: model_id,
+        boimmg_id: lipid.boimmg_id
       });
       console.log('Annotations set:', response.data.message);
       // After successful annotation, navigate back
