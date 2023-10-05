@@ -20,19 +20,18 @@ const CheckedContext = createContext();
 export const CheckedProvider = ({ children }) => {
   const [checkedState, dispatch] = useReducer(checkedReducer, {});
 
-  // Load checked state from localStorage on initial load
   useEffect(() => {
-    const savedCheckedState = localStorage.getItem('checkedState');
+    const savedCheckedState = sessionStorage.getItem('checkedState');
     if (savedCheckedState) {
       dispatch({ type: 'LOAD_CHECKED_STATE', state: JSON.parse(savedCheckedState) });
     }
   }, []);
-
-  // Save checked state to localStorage whenever it changes
+  
+  // Save checked state to sessionStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('checkedState', JSON.stringify(checkedState));
+    sessionStorage.setItem('checkedState', JSON.stringify(checkedState));
   }, [checkedState]);
-
+  
   return (
     <CheckedContext.Provider value={{ checkedState, dispatch }}>
       {children}
