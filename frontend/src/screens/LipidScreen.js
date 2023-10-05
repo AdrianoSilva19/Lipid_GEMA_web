@@ -37,7 +37,9 @@ function LipidScreen() {
     <div className="LipidScreen">
        
       {loading ? <Loading />
-        : error ? <Message variant="danger" >{error}</Message>
+        : error ? <div><Message variant="danger" >{error}</Message>
+        <Message variant="danger" >Dont forget to select the correct database for your ID</Message>
+        </div>
         :
         <div>
       <Row style={{ fontSize: '40px', textAlign: 'center', marginTop: '20px', marginBottom: '25px' }}>
