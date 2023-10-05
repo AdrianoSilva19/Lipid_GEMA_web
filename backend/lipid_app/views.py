@@ -393,24 +393,24 @@ def getDownloadAnnotations(request, pk: str):
     :return: A response containing the downloadable Excel file.
     :rtype: Response
     """
-    s3_url = createXlsFile(pk)
-    file_name = s3_url.split("/")[-1]
+    file = createXlsFile(pk)
+    # file_name = s3_url.split("/")[-1]
 
     # Create an HTTP response with the file as an attachment
     response = HttpResponse(
         content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
+    response["Content-Disposition"] = f'attachment; filename="{pk}".xlsx'
 
     # Use open_excel_from_s3 to get the BytesIO buffer
-    file = open_excel_from_s3(s3_url, pk)
+    # file = open_excel_from_s3(s3_url, pk)
 
     # Write the content of the BytesIO buffer directly to the response
     response.write(file.getvalue())
 
     # Delete the file from S3 after it has been downloaded
     deleteXLFiles(pk)
-    delete_file_from_s3(pk)
+    # delete_file_from_s3(pk)
 
     return response
 
@@ -433,7 +433,7 @@ def open_excel_from_s3(pk: str) -> BytesIO:
     return excel_buffer
 
 
-def createXlsFile(pk: str) -> str:
+def createXlsFile(pk: str) -> BytesIO:
     """
     Create an Excel file with annotations and upload it to AWS S3.
 
@@ -520,15 +520,18 @@ def createXlsFile(pk: str) -> str:
         )
 
     # Upload the XLSX file to AWS S3
+    """
     bucket_name = "lipidgema"
     s3_object_key = f"results/{pk}.xlsx"
 
-    excel_buffer.seek(0)
-    s3.upload_fileobj(excel_buffer, bucket_name, s3_object_key)
+    #excel_buffer.seek(0)
+    #s3.upload_fileobj(excel_buffer, bucket_name, s3_object_key)
 
     # Return the S3 URL of the uploaded file
-    s3_url = f"https://{bucket_name}.s3.amazonaws.com/{s3_object_key}"
-    return s3_url
+    #s3_url = f"https://{bucket_name}.s3.amazonaws.com/{s3_object_key}"
+    """
+    excel_buffer.seek(0)
+    return excel_buffer
 
 
 def delete_file_from_s3(pk: str):

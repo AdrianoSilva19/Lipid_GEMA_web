@@ -8,7 +8,7 @@ def read_conf_file():
     It will return a dictionary in the following format: {workers : 3, limit : 100}
     """
     res = {}
-    path = os.path.dirname(__file__) + "\config\\aws.conf"
+    path = os.path.dirname(__file__) + "/config/aws.conf"
     with open(path) as file:
         lines = file.readlines()
         for line in lines:
