@@ -1,0 +1,20 @@
+version: '3'
+services:
+  frontend:
+    image: kapamais/l_gema:frontend
+    ports:
+      - "3000:3000"  #port in which the web app will be available
+    networks:
+      - lgema-network
+    depends_on:
+      - backend
+
+  backend:
+    image: kapamais/l_gema:backend
+    ports:
+      - "8000:8000"  # Port defined to handle the comunication between backend and frontend
+    networks:
+      - lgema-network
+
+networks:
+  lgema-network:
