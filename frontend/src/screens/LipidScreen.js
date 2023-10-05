@@ -9,6 +9,12 @@ import { useDispatch,useSelector } from 'react-redux'
 import { dictLipid } from '../actions/lipidActions'
 
 
+/**
+ * Function responsible for rendering the Lipid screen in the web application. This function retrieves Lipid information from the Redux store (lipidDict) based on the provided ID parameter from the URL.
+ *
+ * @returns {JSX.Element} The rendered Lipid screen component.
+ */
+
 function LipidScreen() {
   const { id } = useParams();
   const dispatch = useDispatch()

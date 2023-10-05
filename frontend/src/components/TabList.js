@@ -4,6 +4,16 @@ import { Row, Col, ListGroup} from 'react-bootstrap';
 import LipidsComponentsList from '../components/LipidComponentsList';
 import LipidsChildrenList from '../components/LipidChildrenList';
 
+
+
+/**
+ * Renders a set of tabs displaying information about a lipid object.
+ * 
+ * @param {Object} props - The props object containing the lipid object.
+ * @param {Object} props.lipid - The lipid object containing various properties such as formula, charge, smiles, inchi, inchikey, mass, boimmg_id, swiss_lipids_id, lipidmaps_id, model_seed_id, chebi_id, parents, generic, children_species, and components.
+ * 
+ * @returns {JSX.Element} - The rendered set of tabs displaying information about the lipid object.
+ */
 function TabList(props) {
     const { lipid } = props;
   return (
