@@ -1,0 +1,28 @@
+version: '3'
+services:
+  frontend:
+    image: kapamais/l_gema:frontend
+    ports:
+      - "6089:3000" #port in which the web app will be available
+    networks:
+      - lgema-network
+    depends_on:
+      - backend
+    stdin_open: true
+    tty: true
+
+  backend:
+    image: kapamais/l_gema:backend
+    ports:
+      - "6088:8000" # Port defined to handle the comunication between backend and frontend
+    networks:
+      - lgema-network
+    
+
+networks:
+  lgema-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.10.12.200/25

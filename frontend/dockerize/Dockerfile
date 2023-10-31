@@ -8,4 +8,6 @@ RUN npm install -g npm@8.15.0
 
 RUN npm install --legacy-peer-deps
 
-CMD [ "npm","start" ]
+EXPOSE 3000
+
+CMD ["npm", "start"]
