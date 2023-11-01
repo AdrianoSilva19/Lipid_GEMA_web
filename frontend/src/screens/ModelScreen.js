@@ -9,6 +9,12 @@ import { useLipidData } from'../components/LipidDataContext'
 
 
 
+/**
+ * React component that displays annotated and suggested lipid data for a specific model.
+ * Allows the user to download the annotated model and annotations in XML and XLSX formats, respectively.
+ *
+ * @returns {JSX.Element} JSX code representing the UI of the ModelScreen component.
+ */
 function ModelScreen() {
   const { model_id } = useParams();
   const { lipidData, setLipidData } = useLipidData(); // Get context data

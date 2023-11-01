@@ -9,6 +9,12 @@ import { useDispatch,useSelector } from 'react-redux'
 import { dictLipid } from '../actions/lipidActions'
 
 
+/**
+ * Function responsible for rendering the Lipid screen in the web application. This function retrieves Lipid information from the Redux store (lipidDict) based on the provided ID parameter from the URL.
+ *
+ * @returns {JSX.Element} The rendered Lipid screen component.
+ */
+
 function LipidScreen() {
   const { id } = useParams();
   const dispatch = useDispatch()
@@ -37,7 +43,9 @@ function LipidScreen() {
     <div className="LipidScreen">
        
       {loading ? <Loading />
-        : error ? <Message variant="danger" >{error}</Message>
+        : error ? <div><Message variant="danger" >{error}</Message>
+        <Message variant="danger" >Dont forget to select the correct database for your ID</Message>
+        </div>
         :
         <div>
       <Row style={{ fontSize: '40px', textAlign: 'center', marginTop: '20px', marginBottom: '25px' }}>

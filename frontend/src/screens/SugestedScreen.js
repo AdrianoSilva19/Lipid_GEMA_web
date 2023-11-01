@@ -6,6 +6,14 @@ import Lipid_submit from '../components/Lipid_submit';
 import { Row, Col, ListGroup } from 'react-bootstrap';
 
 function SugestedScreen() {
+  /**
+   * Renders a React component that displays a list of suggested lipids based on annotations.
+   * Fetches the suggested annotations and lipids from an API and renders them in a responsive grid layout in the Lipid_submit component.
+   * The user can navigate back to the previous page using a button.
+   *
+   * @returns {JSX.Element} The rendered React component.
+   */
+
   const navigate = useNavigate();  
   const { model_id, lipidKey } = useParams();
   const [annotations, setSuggested_annotations] = useState(null);

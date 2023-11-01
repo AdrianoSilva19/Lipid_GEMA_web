@@ -9,6 +9,15 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
 
 function SearchBar() {
+    /**
+     * Renders a search bar and select input. Allows the user to enter a search pattern and choose an input option,
+     * and triggers a search when the user clicks the "Search" button. The search is performed by making an HTTP GET
+     * request to an API endpoint using the axios library. The fetched lipid data is stored in the component's state
+     * and can be accessed by other components.
+     *
+     * @returns {JSX.Element} The rendered search bar and select input components.
+     */
+
     const [selectedOption, setSelectedOption] = useState('LM_ID'); // Default option
     const [searchText, setSearchText] = useState('');
 

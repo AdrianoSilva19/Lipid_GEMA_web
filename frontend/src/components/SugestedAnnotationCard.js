@@ -3,7 +3,12 @@ import { Row, Col, Card, Pagination } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useChecked } from './CheckedContext'; // Import the useChecked hook
 
-
+/**
+ * Renders a list of suggested lipid cards with pagination functionality.
+ * @param {Object} suggested_list - An object containing the suggested lipid annotations.
+ * @param {string} model_id - The ID of the model.
+ * @returns {JSX.Element} - The rendered component with the list of suggested lipid cards and pagination functionality.
+ */
 function SuggestedLipidsCards({ suggested_list, model_id }) {
   const suggestedKeys = Object.keys(suggested_list.suggested_annotation);
   const cardsPerPage = 16; // Number of cards to display per page
@@ -15,6 +20,10 @@ function SuggestedLipidsCards({ suggested_list, model_id }) {
 
   const [checkedState, setCheckedState] = useState({}); // Maintain checked state
 
+  /**
+   * Toggles the checked state of a lipid card.
+   * @param {string} lipidKey - The key of the lipid card.
+   */
   const toggleSwitch = (lipidKey) => {
     setCheckedState((prevState) => ({
       ...prevState,
@@ -22,6 +31,10 @@ function SuggestedLipidsCards({ suggested_list, model_id }) {
     }));
   };
 
+  /**
+   * Handles pagination by setting the current page.
+   * @param {number} pageNumber - The page number to navigate to.
+   */
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -40,8 +53,6 @@ function SuggestedLipidsCards({ suggested_list, model_id }) {
     { length: rightPageBound - leftPageBound + 1 },
     (_, index) => leftPageBound + index
   );
-
-
 
   return (
     <>
@@ -96,6 +107,13 @@ function SuggestedLipidsCards({ suggested_list, model_id }) {
 }
 
 function SuggestedLipid({ lipidKey, model_id }) {
+  /**
+   * Renders a card displaying information about a lipid.
+   * 
+   * @param {string} lipidKey - The key of the lipid.
+   * @param {string} model_id - The ID of the model.
+   * @returns {JSX.Element} - The rendered card component.
+   */
   const { checkedState, dispatch } = useChecked();
   const switchState = checkedState[lipidKey] || false;
 
