@@ -10,4 +10,8 @@ RUN npm install --legacy-peer-deps
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+RUN npm run build
+
+RUN npm install -g serve
+
+CMD ["serve", "-s", "build"]
