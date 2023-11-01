@@ -7,6 +7,15 @@ import { useNavigate,Link  } from 'react-router-dom';
 import { useChecked } from './CheckedContext';
 
 function Lipid_submit({ lipid, lipidKey, model_id }) {
+  /**
+   * Renders a card component with lipid information and an annotation button.
+   * When this button is pressed the annotation is settled in the model and the page goes back to the model screen.
+   * 
+   * @param {Object} lipid - The lipid object containing information about the lipid.
+   * @param {string} lipidKey - The key of the lipid in the list.
+   * @param {string} model_id - The ID of the model.
+   * @returns {JSX.Element} - The rendered card component.
+   */
   const { dispatch } = useChecked();
   const [isSettingAnnotation, setIsSettingAnnotation] = useState(false);
   const [annotationCompleted, setAnnotationCompleted] = useState(false);

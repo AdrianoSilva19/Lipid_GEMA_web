@@ -7,6 +7,30 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import ReactLoading from 'react-loading';
 
+/**
+ * Represents a React component called ToolScreen that allows users to upload and annotate XML files.
+ *
+ * Example Usage:
+ * import ToolScreen from './ToolScreen';
+ * ReactDOM.render(<ToolScreen />, document.getElementById('root'));
+ *
+ * Main functionalities:
+ * - Allows users to select an XML file and upload it to the server.
+ * - Checks the file size limit (100 MB) before uploading.
+ * - Displays a loading spinner while the file is being uploaded.
+ * - Handles the server response and updates the state with the annotated lipids.
+ * - Provides a link to view the annotations.
+ *
+ * Methods:
+ * - handleFileChange: Updates the state with the selected file name when the file input changes.
+ * - handleSubmit: Handles the form submission event, uploads the file to the server using Axios, and updates the state with the server response.
+ * - render: Renders the component UI, including the file input, loading spinner, and link to view the annotations.
+ *
+ * Fields:
+ * - resultsData: Stores the server response data, which contains the annotated lipids.
+ * - selectedFileName: Stores the name of the selected file.
+ * - isLoading: Tracks the loading state of the file upload process.
+ */
 class ToolScreen extends Component {
   state = {
     resultsData: '',

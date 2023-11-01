@@ -3,6 +3,12 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 function AnnotatedTable({ lipid }) {
+  /**
+   * Renders a table with annotated lipid data and provides pagination functionality.
+   * 
+   * @param {Object} lipid - An object containing annotated lipid data.
+   * @returns {JSX.Element} - The rendered table component.
+   */
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
 

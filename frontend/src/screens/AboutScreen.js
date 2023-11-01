@@ -1,9 +1,13 @@
-import SearchBar from '../components/SearchBar'
 import { Container } from 'react-bootstrap'
 import { Row, Col, ListGroup } from 'react-bootstrap'
 
 
 function AboutScreen() {
+        /**
+   * Renders a screen with the information about the tool and with links to the source code.
+   *
+   * @returns {JSX.Element} The About screen.
+   */
   
     return (
       <div>

@@ -7,6 +7,13 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 function LipidsChildrenList(props) {
+  /**
+   * Renders a table of lipid components with pagination and search functionality.
+   * 
+   * @param {Object} props - The component props.
+   * @param {Array} props.components - The list of lipid components to be displayed.
+   * @returns {JSX.Element} The rendered table of lipid components.
+   */
   const { components } = props;
   const itemsPerPage = 10;
 
@@ -36,12 +43,13 @@ function LipidsChildrenList(props) {
     <div>
         <Row className="searchBar">
             <Col>
-              <FloatingLabel controlId="floatingInputGrid" label="Search Lipid by pattern">
+              <FloatingLabel controlId="floatingInputGrid" label="Search Lipid by pattern" style={{color:"#00005c"}}>
                 <Form.Control
                   type="text"
                   placeholder="Search lipid by patter..."
                   value={searchQuery}
                   onChange={handleSearchChange}
+                  
                 />
               </FloatingLabel>
         </Col>
