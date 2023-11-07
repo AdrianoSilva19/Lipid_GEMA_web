@@ -20,12 +20,12 @@ import os
 import pandas as pd
 
 
-conf = _utils.read_conf_file()
-s3 = boto3.client(
-    "s3",
-    aws_access_key_id=conf["aws_access_key_id"],
-    aws_secret_access_key=conf["aws_secret_access_key"],
-)
+#conf = _utils.read_conf_file()
+#s3 = boto3.client(
+    #"s3",
+    #aws_access_key_id=conf["aws_access_key_id"],
+    #aws_secret_access_key=conf["aws_secret_access_key"],
+#)
 
 
 @api_view(["GET"])
