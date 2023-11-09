@@ -1,6 +1,5 @@
 {
   "name": "frontend",
-  "proxy": "http://palsson.di.uminho.pt:6088",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

@@ -6,7 +6,7 @@ import ReactLoading from 'react-loading';
 import AnnotatedTable from '../components/AnnotatedCard'; 
 import SugestedAnnotationCard from '../components/SugestedAnnotationCard'; 
 import { useLipidData } from'../components/LipidDataContext'
-
+const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT
 
 
 /**
@@ -29,7 +29,7 @@ function ModelScreen() {
           // If data is already fetched and stored in context, use it
           setIsLoading(false);
         } else {
-          const response = await axios.get(`/api/model/${model_id}`);
+          const response = await axios.get(`${API_ENDPOINT}/api/model/${model_id}`);
           setLipidData(prevData => ({ ...prevData, [model_id]: response.data }));
           setIsLoading(false);
         }
@@ -45,7 +45,7 @@ function ModelScreen() {
 
   const handleDownloadClick = async () => {
     try {
-      const response = await axios.get(`/api/download/model/${model_id}`, {
+      const response = await axios.get(`${API_ENDPOINT}/api/download/model/${model_id}`, {
         responseType: 'blob', 
       });
 
@@ -64,7 +64,7 @@ function ModelScreen() {
   };
   const handleDownloadAnnotationsClick = async () => {
     try {
-      const response = await axios.get(`/api/download/model/annotations/${model_id}`, {
+      const response = await axios.get(`${API_ENDPOINT}/api/download/model/annotations/${model_id}`, {
         responseType: 'blob', 
       });
 

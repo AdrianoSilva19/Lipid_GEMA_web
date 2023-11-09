@@ -1,7 +1,7 @@
 version: '3'
 services:
   frontend:
-    image: kapamais/l_gema:frontend1
+    image: kapamais/l_gema:frontend2
     ports:
       - "6089:3000" #port in which the web app will be available
     networks:
@@ -12,7 +12,7 @@ services:
     tty: true
 
   backend:
-    image: kapamais/l_gema:backend1
+    image: kapamais/l_gema:backend2
     ports:
       - "6088:8000" # Port defined to handle the comunication between backend and frontend
     networks:

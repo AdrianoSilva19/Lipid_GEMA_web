@@ -8,6 +8,7 @@ import React, { useState } from 'react';
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
 
+const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT
 function SearchBar() {
     /**
      * Renders a search bar and select input. Allows the user to enter a search pattern and choose an input option,
@@ -37,12 +38,13 @@ function SearchBar() {
     event.preventDefault();
 
     // Fetch the lipid data based on the selected option and search text
-    const { data } = await axios.get(`/api/lipid/${selectedOption}/${searchText}`);
+    const { data } = await axios.get(`${API_ENDPOINT}/api/lipid/${selectedOption}/${searchText}`);
     setLipid(data);
     // Navigate to the LipidScreen with the fetched lipid data
     history(`/lipid/${data.boimmg_id}`, { lipidData: data });
   };
-  
+    console.log("Hello World");
+    console.log(API_ENDPOINT);
     const isSearchValid = selectedOption && searchText.trim() !== '';
 
   

@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button';
 import axios from 'axios';
 import { useNavigate,Link  } from 'react-router-dom';
 import { useChecked } from './CheckedContext';
-
+const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT
 function Lipid_submit({ lipid, lipidKey, model_id }) {
   /**
    * Renders a card component with lipid information and an annotation button.
@@ -33,7 +33,7 @@ function Lipid_submit({ lipid, lipidKey, model_id }) {
   const handleAnnotateClick = async () => {
     try {
       setIsSettingAnnotation(true);
-      const response = await axios.post('/api/set_model_annotations/', {
+      const response = await axios.post(`${API_ENDPOINT}/api/set_model_annotations`, {
         lipidKey: lipidKey,
         lipid: lipid,
         model_id: model_id,

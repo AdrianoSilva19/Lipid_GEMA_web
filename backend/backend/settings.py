@@ -25,7 +25,12 @@ SECRET_KEY = "django-insecure-d_eqncqio-^o%-943!cs)9^&j5)hnsz-iqe!y_w$bgi+d)vw1n
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["backend", "127.0.0.1","http://palsson.di.uminho.pt:6088","palsson.di.uminho.pt"]
+ALLOWED_HOSTS = [
+    "backend",
+    "127.0.0.1",
+    "http://palsson.di.uminho.pt:6088",
+    "palsson.di.uminho.pt",
+]
 
 
 # Application definition
@@ -121,7 +126,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "static/"
-
+CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_ALL_ORIGINS = True
 
 # Default primary key field type

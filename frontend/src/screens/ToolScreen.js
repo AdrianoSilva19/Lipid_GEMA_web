@@ -7,6 +7,7 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import ReactLoading from 'react-loading';
 
+const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT
 /**
  * Represents a React component called ToolScreen that allows users to upload and annotate XML files.
  *
@@ -32,6 +33,7 @@ import ReactLoading from 'react-loading';
  * - isLoading: Tracks the loading state of the file upload process.
  */
 class ToolScreen extends Component {
+  
   state = {
     resultsData: '',
     selectedFileName: '',
@@ -61,7 +63,7 @@ class ToolScreen extends Component {
         formData.append('gsmModel', file);
   
         try {
-          const response = await axios.post('/api/upload/', formData);
+          const response = await axios.post(`${API_ENDPOINT}/api/upload`, formData);
           const resultsData = response.data;
           this.setState({ resultsData, isLoading: false });
         } catch (error) {

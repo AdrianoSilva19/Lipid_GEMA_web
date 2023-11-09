@@ -5,6 +5,8 @@ import axios from 'axios';
 import Lipid_submit from '../components/Lipid_submit';
 import { Row, Col, ListGroup } from 'react-bootstrap';
 
+const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT
+
 function SugestedScreen() {
   /**
    * Renders a React component that displays a list of suggested lipids based on annotations.
@@ -27,7 +29,7 @@ function SugestedScreen() {
   useEffect(() => {
     async function fetchSuggested_annotations() {
       try {
-        const response = await axios.get(`/api/model/${model_id}/${lipidKey}`);
+        const response = await axios.get(`${API_ENDPOINT}/api/model/${model_id}/${lipidKey}`);
         setSuggested_annotations(response.data);
       } catch (error) {
         console.error('Error fetching lipid data:', error);
@@ -51,7 +53,7 @@ function SugestedScreen() {
             const endpoint = value.startsWith('LM') ? 'LM_ID' : 'SL_ID';
   
             try {
-              const response = await axios.get(`/api/lipid/${endpoint}/${value}`);
+              const response = await axios.get(`${API_ENDPOINT}/api/lipid/${endpoint}/${value}`);
               const lipidData = response.data;
   
               // Check if boimmg_id is unique before pushing

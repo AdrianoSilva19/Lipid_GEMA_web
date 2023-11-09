@@ -4,11 +4,12 @@ import {GENERICS_LIST_REQUEST,
 } from "../constants/genericsConstants"
 import axios from 'axios';
 
+const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT
 
 export const listGenerics = () => async(dispach) => {
     try{
         dispach({type: GENERICS_LIST_REQUEST})
-        const {data} = await axios.get('/api/generics/')
+        const {data} = await axios.get(`${API_ENDPOINT}/api/generics`)
         dispach({
             type: GENERICS_LIST_SUCCESS,
             payload: data
